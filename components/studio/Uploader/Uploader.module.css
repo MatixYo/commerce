@@ -1,0 +1,23 @@
+.dropzone {
+  @apply h-44 flex items-center justify-center cursor-pointer border-2 border-dashed rounded-2xl opacity-70 hover:opacity-100 transition transform
+}
+
+.input {
+  @apply bg-transparent px-3 py-2 appearance-none w-full transition duration-150 ease-in-out pl-10 rounded-2xl;
+
+  @screen sm {
+    min-width: 300px;
+  }
+}
+
+.input:focus {
+  @apply outline-none shadow-outline-normal;
+}
+
+.iconContainer {
+  @apply absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none;
+}
+
+.icon {
+  @apply h-5 w-5;
+}

@@ -1,0 +1,38 @@
+.input {
+  @apply bg-transparent px-3 py-2 appearance-none w-full transition duration-150 ease-in-out pl-10 rounded-2xl;
+
+  @screen sm {
+    min-width: 300px;
+  }
+}
+
+.input:focus {
+  @apply outline-none shadow-outline-normal;
+}
+
+.iconContainer {
+  @apply absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none;
+}
+
+.icon {
+  @apply h-5 w-5;
+}
+
+.masonry {
+  @apply flex flex-wrap -mr-10 pt-10;
+}
+
+.gif {
+  @apply block h-72 mr-10 mb-10 rounded-2xl cursor-pointer transform ring-4 ring-offset-4 ring-offset-black ring-opacity-0 ring-gray-200 transition;
+  animation-duration: .75s;
+  flex: 1 0 auto;
+  width: calc(18rem * var(--aspect-ratio));
+
+  &:hover {
+    @apply scale-105 ring-opacity-100 z-10;
+  }
+}
+
+.loaded {
+  @apply animate-none;
+}

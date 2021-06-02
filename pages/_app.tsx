@@ -6,6 +6,7 @@ import { FC, useEffect } from 'react'
 import type { AppProps } from 'next/app'
 import { Head } from '@components/common'
 import { ManagedUIContext } from '@components/ui/context'
+import { AnimateSharedLayout } from 'framer-motion'
 
 const Noop: FC = ({ children }) => <>{children}</>
 
@@ -17,13 +18,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   return (
-    <>
+    <AnimateSharedLayout>
       <Head />
       <ManagedUIContext>
         <Layout pageProps={pageProps}>
           <Component {...pageProps} />
         </Layout>
       </ManagedUIContext>
-    </>
+    </AnimateSharedLayout>
   )
 }

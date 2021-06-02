@@ -9,6 +9,7 @@ import { Heart, Bag } from '@components/icons'
 import { useUI } from '@components/ui/context'
 import DropdownMenu from './DropdownMenu'
 import s from './UserNav.module.css'
+import useTranslation from 'next-translate/useTranslation'
 
 interface Props {
   className?: string
@@ -17,6 +18,7 @@ interface Props {
 const countItem = (count: number, item: LineItem) => count + item.quantity
 
 const UserNav: FC<Props> = ({ className }) => {
+  const { t } = useTranslation('common')
   const { data } = useCart()
   const { data: customer } = useCustomer()
   const { toggleSidebar, closeSidebarIfPresent, openModal } = useUI()
@@ -26,6 +28,13 @@ const UserNav: FC<Props> = ({ className }) => {
     <nav className={cn(s.root, className)}>
       <div className={s.mainContainer}>
         <ul className={s.list}>
+          <li className={s.item}>
+            <Link href="/studio">
+              <a onClick={closeSidebarIfPresent} aria-label="Creator">
+                {t('nav-creator')}
+              </a>
+            </Link>
+          </li>
           <li className={s.item} onClick={toggleSidebar}>
             <Bag />
             {itemsCount > 0 && <span className={s.bagCount}>{itemsCount}</span>}
