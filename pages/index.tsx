@@ -35,8 +35,8 @@ export default function Home({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <Grid>
-        {products.slice(0, 3).map((product, i) => (
+      <Grid layout="normal">
+        {products.slice(0, 4).map((product, i) => (
           <ProductCard
             key={product.id}
             product={product}
