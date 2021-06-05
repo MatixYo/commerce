@@ -1,5 +1,13 @@
 .dropzone {
-  @apply h-44 flex items-center justify-center cursor-pointer border-2 border-dashed rounded-2xl opacity-70 hover:opacity-100 transition transform
+  @apply h-44 flex items-center justify-center cursor-pointer border-2 border-dashed border-accents-3 rounded-2xl transition transform;
+
+  &:hover {
+    @apply border-accents-6;
+  }
+
+  &.dragged {
+     @apply scale-102;
+  }
 }
 
 .input {

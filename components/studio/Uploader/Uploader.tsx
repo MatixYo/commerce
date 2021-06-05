@@ -27,13 +27,13 @@ const acceptedFileFormats = {
 }
 
 type VideoSourceType = {
-  url: string
+  src: string
   type: string
 }
 
 type ResultType = {
   providerId: string
-  originSource: string
+  originSource: string | null
   videoSources: [VideoSourceType]
   width: number
   height: number
@@ -46,6 +46,9 @@ async function uploadToCloudinary(
   file: File,
   onProgress: (progressVal: number) => void
 ): Promise<ResultType> {
+  if (!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)
+    throw new Error('Missing param NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET')
+
   onProgress(0)
   const fd = new FormData()
   fd.append('file', file)
@@ -61,8 +64,8 @@ async function uploadToCloudinary(
 
   return {
     providerId: body.asset_id,
-    videoSources: body.eager.map((e: object) => ({
-      url: e.secure_url,
+    videoSources: body.eager.map((e: any) => ({
+      src: e.secure_url,
       type: e.format,
     })),
     width: body.width,
@@ -70,16 +73,12 @@ async function uploadToCloudinary(
     frameRate: body.frame_rate,
     numFrames: body.nb_frames,
     avgColor: null, //Cloudinary doesn't provide average color
+    originSource: null, //TODO may be provided by user
   }
 }
 
-interface Props {
-  className?: string
-  children?: any
-}
-
-const Uploader: FC<Props> = ({}) => {
-  const { t } = useTranslation('common')
+const Uploader: FC = () => {
+  const { t } = useTranslation('studio')
   const [progressVal, setProgressVal] = useState(null)
   const router = useRouter()
 
@@ -133,8 +132,8 @@ const Uploader: FC<Props> = ({}) => {
       providerId: data.gfyId,
       originalSource: 'TODO',
       videoSources: [
-        { url: data.webmUrl, type: 'webm' },
-        { url: data.mp4Url, type: 'mp4' },
+        { src: data.webmUrl, type: 'webm' },
+        { src: data.mp4Url, type: 'mp4' },
       ],
       width: data.width,
       height: data.height,
@@ -162,9 +161,8 @@ const Uploader: FC<Props> = ({}) => {
     <>
       <div
         {...getRootProps()}
-        className={cn(s.dropzone, { 'scale-105': isDragActive })}
+        className={cn(s.dropzone, { [s.dragged]: isDragActive })}
       >
-        {/* FIXME */}
         <div className="space-y-1 text-center">
           <svg
             className="mx-auto h-12 w-12 text-gray-400"
@@ -180,12 +178,12 @@ const Uploader: FC<Props> = ({}) => {
               strokeLinejoin="round"
             />
           </svg>
-          <div className="flex text-sm text-gray-600">
+          <div className="flex text-sm text-accents-5">
             <label
               htmlFor="file-upload"
-              className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+              className="relative cursor-pointer rounded-md font-medium text-indigo-500 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
             >
-              <span>Upload a file</span>
+              <span>{t('upload-file')}</span>
               <input
                 id="file-upload"
                 name="file-upload"
@@ -194,11 +192,14 @@ const Uploader: FC<Props> = ({}) => {
                 {...getInputProps()}
               />
             </label>
-            <p className="pl-1">or drag and drop</p>
+            <p className="pl-1">{t('drag-n-drop')}</p>
           </div>
-          <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-          <p>
-            {t('drop-files')} {progressVal}
+          <p className="text-xs text-accents-4">
+            {t('studio:formats-size-supported', {
+              formats: 'PNG, JPG, GIF',
+              size: 10,
+              unit: 'MB',
+            })}
           </p>
         </div>
       </div>
@@ -218,14 +219,11 @@ const Uploader: FC<Props> = ({}) => {
         <input
           id="url"
           className={s.input}
-          placeholder="Wpisz adres URL"
+          placeholder={t('paste-url')}
           onPaste={onPaste}
         />
       </div>
-      <div>
-        Wybierz z Gfycat
-        <GifSearch onSelectGif={onSelectGif} />
-      </div>
+      <GifSearch onSelectGif={onSelectGif} />
     </>
   )
 }

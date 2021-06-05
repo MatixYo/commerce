@@ -1,0 +1,6 @@
+{
+  "upload-file": "Upload a file",
+  "drag-n-drop": "or drag and drop",
+  "formats-size-supported": "{{formats}} up to {{size}}{{unit}}",
+  "paste-url": "Paste URL address"
+}

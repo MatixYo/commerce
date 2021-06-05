@@ -4,6 +4,7 @@ import { Layout } from '@components/common'
 import { Container, Text } from '@components/ui'
 import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
+import VideoCropper from '@components/studio/VideoEditor/VideoCropper'
 
 export async function getStaticProps({
   preview,
@@ -29,24 +30,16 @@ export async function getStaticPaths() {
 export default function StudioEdit() {
   const router = useRouter()
   const data = JSON.parse(decodeURIComponent(router.query.data || '{}'))
+  console.log(data.videoSources)
 
   return (
     <Container>
       <Text variant="pageHeading">Creator Studio</Text>
       <motion.div
-        className="h-64 w-96 mx-auto"
+        className="relative mx-auto h-64 w-96"
         layoutId={`video-${data.providerId}`}
       >
-        <video autoPlay loop muted>
-          {data.videoSources &&
-            data.videoSources.map((item) => (
-              <source
-                key={item.type}
-                src={item.url}
-                type={`video/${item.type}`}
-              />
-            ))}
-        </video>
+        {data.videoSources && <VideoCropper videoSources={data.videoSources} />}
       </motion.div>
     </Container>
   )

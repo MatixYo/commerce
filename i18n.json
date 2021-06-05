@@ -2,6 +2,7 @@
   "locales": ["en", "pl"],
   "defaultLocale": "en",
   "pages": {
-    "*": ["common"]
+    "*": ["common"],
+    "/studio": ["studio"]
   }
 }

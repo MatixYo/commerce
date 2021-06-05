@@ -1,0 +1,6 @@
+{
+  "upload-file": "Prześlij plik",
+  "drag-n-drop": "albo przeciągnij i upuść",
+  "formats-size-supported": "{{formats}} do {{size}}{{unit}}",
+  "paste-url": "Wklej adres URL"
+}
