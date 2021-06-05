@@ -19,14 +19,12 @@
 }
 
 .masonry {
-  @apply flex flex-wrap -mr-10 pt-10;
+  @apply flex flex-col flex-wrap content-between pt-10;
 }
 
 .gif {
-  @apply block h-72 mr-10 mb-10 rounded-2xl cursor-pointer transform ring-4 ring-offset-4 ring-offset-black ring-opacity-0 ring-gray-200 transition;
+  @apply block w-full mb-8 rounded-2xl cursor-pointer transform ring-4 ring-offset-4 ring-offset-black ring-opacity-0 ring-gray-200 transition;
   animation-duration: .75s;
-  flex: 1 0 auto;
-  width: calc(18rem * var(--aspect-ratio));
 
   &:hover {
     @apply scale-105 ring-opacity-100 z-10;
@@ -35,4 +33,8 @@
 
 .loaded {
   @apply animate-none;
+}
+
+.label {
+  @apply block text-accents-7 mt-5 mb-2;
 }

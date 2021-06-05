@@ -59,6 +59,7 @@ module.exports = {
         'extra-loose': '2.2',
       },
       scale: {
+        102: '1.02',
         120: '1.2',
       },
     },

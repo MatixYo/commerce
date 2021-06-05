@@ -7,6 +7,7 @@ import { useOnScreen } from '@lib/hooks/useOnScreen'
 import { useSWRInfinite } from 'swr'
 import { fetcher } from '@lib/fetcher'
 import { GifItem } from '@components/studio/GifSearch/GifItem'
+import Masonry from 'react-masonry-css'
 
 const PAGE_SIZE = 30
 
@@ -28,6 +29,14 @@ const getKey = (
   if (!previousPageData)
     return `https://api.gfycat.com/v1/gfycats/trending?count=${pageSize}`
   return `https://api.gfycat.com/v1/gfycats/trending?count=${pageSize}&cursor=${previousPageData?.cursor}`
+}
+
+const breakpointColumnsObj = {
+  default: 6,
+  1600: 5,
+  1100: 3,
+  700: 2,
+  500: 1,
 }
 
 interface Props {
@@ -72,15 +81,15 @@ const GifSearch: FC<Props> = ({
   return useMemo(
     () => (
       <>
+        <label className={s.label} htmlFor={id}>
+          Wybierz z Gfycat
+        </label>
         <div
           className={cn(
             'relative text-sm bg-accents-1 text-base w-full transition-colors duration-150 rounded-2xl',
             className
           )}
         >
-          <label className="hidden" htmlFor={id}>
-            Search
-          </label>
           <div className={s.iconContainer}>
             <svg className={s.icon} fill="currentColor" viewBox="0 0 20 20">
               <path
@@ -97,14 +106,18 @@ const GifSearch: FC<Props> = ({
             onInput={(e) => setValue(e.currentTarget.value)}
           />
         </div>
-        {isEmpty ? (
-          <p>Yay, no GIFs found.</p>
-        ) : value ? (
-          <p>Showing results for: {value}</p>
-        ) : (
-          <p>Showing trending</p>
-        )}
-        <div className={s.masonry}>
+        <p className={s.label}>
+          {isEmpty
+            ? 'Yay, no GIFs found.'
+            : value
+            ? `Showing results for: ${value}`
+            : 'Showing trending'}
+        </p>
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="flex -ml-8"
+          columnClassName="pl-8"
+        >
           {gifs.map((gif) => (
             <GifItem
               key={gif.gfyId}
@@ -112,7 +125,7 @@ const GifSearch: FC<Props> = ({
               onClick={() => onSelectGif(gif)}
             />
           ))}
-        </div>
+        </Masonry>
         <div ref={ref}>
           {isLoadingMore ? (
             <svg
