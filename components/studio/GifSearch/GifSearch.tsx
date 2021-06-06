@@ -50,7 +50,7 @@ const GifSearch: FC<Props> = ({
   id = 'gif-search',
   onSelectGif,
 }) => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('studio')
 
   //TODO add debounce
   const [value, setValue] = useState('')
@@ -82,7 +82,7 @@ const GifSearch: FC<Props> = ({
     () => (
       <>
         <label className={s.label} htmlFor={id}>
-          Wybierz z Gfycat
+          {t('choose-from-gfycat')}
         </label>
         <div
           className={cn(
@@ -102,7 +102,7 @@ const GifSearch: FC<Props> = ({
           <input
             id={id}
             className={s.input}
-            placeholder={t('search-for-products')}
+            placeholder="Cats"
             onInput={(e) => setValue(e.currentTarget.value)}
           />
         </div>

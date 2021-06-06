@@ -27,7 +27,7 @@
   animation-duration: .75s;
 
   &:hover {
-    @apply scale-105 ring-opacity-100 z-10;
+    @apply scale-102 ring-opacity-100 z-10;
   }
 }
 

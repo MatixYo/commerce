@@ -13,15 +13,6 @@ interface Props {
 }
 
 const VideoCropper: FC<Props> = ({ videoSources }) => {
-  const videoSrc = useMemo(
-    () =>
-      videoSources.map((item) => ({
-        src: item.src,
-        type: `video/${item.type}`,
-      })),
-    [videoSources]
-  )
-
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
 
@@ -33,9 +24,10 @@ const VideoCropper: FC<Props> = ({ videoSources }) => {
   return (
     <Cropper
       mediaProps={{ autoPlay: false, muted: true, onSeeked }}
-      video={videoSrc}
+      video={videoSources}
       crop={crop}
       onCropChange={setCrop}
+      showGrid={false}
     />
   )
 }
