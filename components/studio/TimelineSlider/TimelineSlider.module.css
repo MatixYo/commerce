@@ -3,11 +3,17 @@
 }
 
 .handle {
-  @apply absolute w-6 -inset-y-3 bg-indigo-300 opacity-75 z-10 transform-gpu -translate-x-2/4 rounded-full border border-transparent;
+  @apply absolute w-12 h-12 bottom-0 bg-indigo-300 opacity-75 z-10 transform-gpu -translate-x-2/4 translate-y-2/4 rounded-full border border-transparent;
   &:focus {
      @apply outline-none ring-2 ring-offset-1 ring-purple-600;
   }
   &.disabled {
     @apply bg-indigo-600;
+  }
+  &:after {
+    content: "";
+    @apply absolute w-full -top-12 inset-x-0;
+    border: 23px solid transparent;
+    border-bottom: 40px solid rgba(165, 180, 252, var(--tw-bg-opacity));
   }
 }
