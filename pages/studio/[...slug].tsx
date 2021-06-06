@@ -56,7 +56,7 @@ export default function StudioEdit() {
           >
             <VideoCropper videoSources={videoSources} />
           </motion.div>
-          <Timeline videoSources={videoSources} />
+          <Timeline videoSources={videoSources} numFrames={data.numFrames} />
         </>
       )}
     </Container>

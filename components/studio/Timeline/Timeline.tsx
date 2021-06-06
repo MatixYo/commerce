@@ -3,16 +3,18 @@ import { VideoSourceType } from '@components/studio/types'
 import cn from 'classnames'
 import s from './Timeline.module.css'
 import TimelineSnapshots from '@components/studio/TimelineSnapshots'
+import TimelineSlider from '@components/studio/TimelineSlider'
 
 interface Props {
   videoSources: VideoSourceType[]
+  numFrames: number
 }
 
-const Timeline: FC<Props> = ({ videoSources }) => {
+const Timeline: FC<Props> = ({ videoSources, numFrames }) => {
   const [timelineLoaded, setTimelineLoaded] = useState(false)
 
   return (
-    <div className="h-16 mt-8 rounded-xl border-2 overflow-hidden">
+    <div className={s.timeline}>
       <TimelineSnapshots
         videoSources={videoSources}
         onLoadedChange={(loaded: boolean) => {
@@ -22,6 +24,7 @@ const Timeline: FC<Props> = ({ videoSources }) => {
           [s.loaded]: timelineLoaded,
         })}
       />
+      <TimelineSlider numFrames={numFrames} />
     </div>
   )
 }

@@ -1,3 +1,11 @@
+.timeline {
+  @apply relative h-16 mt-8 border-2;
+}
+
+.timeline, .skeleton {
+  @apply rounded-xl;
+}
+
 .skeleton {
   @apply bg-gradient-to-r from-purple-400 to-indigo-800;
 
