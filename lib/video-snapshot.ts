@@ -1,4 +1,5 @@
 import { VideoSourceType } from '@components/studio/types'
+import { fireOnce } from '@lib/fire-once'
 
 export interface Properties {
   videoWidth: number
@@ -22,11 +23,13 @@ class VideoSnapshot {
     if (!this.video) await this.loadVideo(time)
     else {
       this.video.currentTime = time
-      this.video.addEventListener('timeupdate', function timeupdateHandler() {
-        this.removeEventListener('timeupdate', timeupdateHandler)
-        this.pause()
-        return this
-      })
+
+      if (isSafari) this.video.play()
+
+      await fireOnce(this.video, 'timeupdate')
+      this.video.pause()
+
+      return this.video
     }
 
     if (!this.video?.videoWidth || !this.video?.videoHeight) {
@@ -38,7 +41,7 @@ class VideoSnapshot {
 
   // TODO: implement video cache
   private loadVideo = (time: number = 0): Promise<HTMLVideoElement> =>
-    new Promise((resolve, reject) => {
+    new Promise(async (resolve, reject) => {
       if (typeof this.videoSources === 'undefined')
         reject(new Error('video sources have not been provided'))
       const video = document.createElement('video')
@@ -64,15 +67,14 @@ class VideoSnapshot {
       }
       this.video = video
 
-      // loadedmetadata, loadeddata, play, playing
-      video.addEventListener('timeupdate', function timeupdateHandler() {
-        video.removeEventListener('timeupdate', timeupdateHandler)
-        video.pause()
-        resolve(video)
-      })
       video.addEventListener('error', () => {
         reject(new Error('failed to load video'))
       })
+
+      await fireOnce(this.video, 'timeupdate')
+      this.video.pause()
+
+      resolve(this.video)
     })
 
   getProperties = async (): Promise<Properties> => {

@@ -11,18 +11,21 @@ interface Props {
 }
 
 const Timeline: FC<Props> = ({ videoSources, numFrames }) => {
-  const [timelineLoaded, setTimelineLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  console.log(loaded)
 
   return (
-    <div className={s.timeline}>
+    <div
+      className={cn(s.timeline, 'animate-pulse', {
+        [s.loaded]: loaded,
+      })}
+    >
       <TimelineSnapshots
         videoSources={videoSources}
         onLoadedChange={(loaded: boolean) => {
-          setTimelineLoaded(loaded)
+          setLoaded(loaded)
         }}
-        className={cn(s.skeleton, 'animate-pulse', {
-          [s.loaded]: timelineLoaded,
-        })}
+        className={cn('rounded-xl', { [s.transparent]: !loaded })}
       />
       <TimelineSlider numFrames={numFrames} />
     </div>
