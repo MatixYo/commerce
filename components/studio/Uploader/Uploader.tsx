@@ -7,6 +7,7 @@ import request from 'superagent'
 import cn from 'classnames'
 import { afterLast } from '@lib/after-last'
 import { useRouter } from 'next/router'
+import { VideoSourceType } from '@components/studio/types'
 
 const acceptedFileFormats = {
   image: ['webp', 'gif'],
@@ -24,11 +25,6 @@ const acceptedFileFormats = {
     'avi',
     'quicktime',
   ],
-}
-
-type VideoSourceType = {
-  src: string
-  type: string
 }
 
 type ResultType = {

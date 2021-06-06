@@ -5,6 +5,11 @@ import { Container, Text } from '@components/ui'
 import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
 import VideoCropper from '@components/studio/VideoEditor/VideoCropper'
+import TimelineSnapshots from '@components/studio/TimelineSnapshots'
+import { useMemo, useState } from 'react'
+import { VideoSourceType } from '@components/studio/types'
+import cn from 'classnames'
+import Timeline from '@components/studio/Timeline'
 
 export async function getStaticProps({
   preview,
@@ -30,17 +35,30 @@ export async function getStaticPaths() {
 export default function StudioEdit() {
   const router = useRouter()
   const data = JSON.parse(decodeURIComponent(router.query.data || '{}'))
-  console.log(data.videoSources)
+
+  const videoSources = useMemo(
+    () =>
+      (data.videoSources || []).map((item: VideoSourceType) => ({
+        src: item.src,
+        type: `video/${item.type}`,
+      })),
+    [data.videoSources]
+  )
 
   return (
     <Container>
       <Text variant="pageHeading">Creator Studio</Text>
-      <motion.div
-        className="relative mx-auto h-64 w-96"
-        layoutId={`video-${data.providerId}`}
-      >
-        {data.videoSources && <VideoCropper videoSources={data.videoSources} />}
-      </motion.div>
+      {data.videoSources && (
+        <>
+          <motion.div
+            className="relative mx-auto h-64 w-96"
+            layoutId={`video-${data.providerId}`}
+          >
+            <VideoCropper videoSources={videoSources} />
+          </motion.div>
+          <Timeline videoSources={videoSources} />
+        </>
+      )}
     </Container>
   )
 }

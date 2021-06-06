@@ -1,0 +1,7 @@
+.skeleton {
+  @apply bg-gradient-to-r from-purple-400 to-indigo-800;
+
+  &.loaded {
+    @apply animate-none;
+  }
+}
