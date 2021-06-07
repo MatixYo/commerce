@@ -1,6 +1,6 @@
 {
   "schema": {
-    "http://localhost:3001/shop-api": {}
+    "http://localhost:3000/shop-api": {}
   },
   "documents": [
     {
