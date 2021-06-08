@@ -54,7 +54,10 @@ export default function StudioEdit() {
             className="relative mx-auto h-64 w-96"
             layoutId={`video-${data.providerId}`}
           >
-            <VideoCropper videoSources={videoSources} />
+            <VideoCropper
+              videoSources={videoSources}
+              classes={{ mediaClassName: 'h-64 w-96' }}
+            />
           </motion.div>
           <Timeline videoSources={videoSources} numFrames={data.numFrames} />
         </>

@@ -10,9 +10,10 @@ interface Props {
   className?: string
   children?: any
   videoSources: VideoSourceType[]
+  classes: object
 }
 
-const VideoCropper: FC<Props> = ({ videoSources }) => {
+const VideoCropper: FC<Props> = ({ videoSources, classes }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
 
@@ -26,6 +27,7 @@ const VideoCropper: FC<Props> = ({ videoSources }) => {
       mediaProps={{ autoPlay: false, muted: true, onSeeked }}
       video={videoSources}
       crop={crop}
+      classes={classes}
       onCropChange={setCrop}
       showGrid={false}
     />
