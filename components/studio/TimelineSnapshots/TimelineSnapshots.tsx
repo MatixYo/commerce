@@ -29,8 +29,6 @@ const TimelineSnapshots: FC<Props> = ({
         throw new Error('error creating canvas context')
       }
 
-      context.clearRect(0, 0, width, height)
-
       const vs = new VideoSnapshot(videoSources)
       const { videoWidth, videoHeight, duration } = await vs.getProperties()
 
