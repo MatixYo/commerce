@@ -66,14 +66,29 @@ type AnimationVideo implements Node {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  url: String!
   author: Customer
+  videoSources: [VideoSource!]!
+  createdUsing: String!
+  providerId: String!
+  originalSource: String
+  width: Int!
+  height: Int!
+  frameRate: Float!
+  numFrames: Int!
+  avgColor: String
 }
 
 input AnimationVideoFilterParameter {
   createdAt: DateOperators
   updatedAt: DateOperators
-  url: StringOperators
+  createdUsing: StringOperators
+  providerId: StringOperators
+  originalSource: StringOperators
+  width: NumberOperators
+  height: NumberOperators
+  frameRate: NumberOperators
+  numFrames: NumberOperators
+  avgColor: StringOperators
 }
 
 type AnimationVideoList implements PaginatedList {
@@ -92,7 +107,14 @@ input AnimationVideoSortParameter {
   id: SortOrder
   createdAt: SortOrder
   updatedAt: SortOrder
-  url: SortOrder
+  createdUsing: SortOrder
+  providerId: SortOrder
+  originalSource: SortOrder
+  width: SortOrder
+  height: SortOrder
+  frameRate: SortOrder
+  numFrames: SortOrder
+  avgColor: SortOrder
 }
 
 union ApplyCouponCodeResult =
@@ -4129,15 +4151,23 @@ input StringOperators {
 }
 
 input SubmitAnimationItemInput {
-  authorId: ID
+  customerId: ID
   title: String!
   source: String
   videoId: ID!
 }
 
 input SubmitAnimationVideoInput {
-  url: String!
-  authorId: ID
+  customerId: ID
+  videoSources: [VideoSourceInput!]!
+  createdUsing: String!
+  providerId: String!
+  originalSource: String
+  width: Int!
+  height: Int!
+  frameRate: Float!
+  numFrames: Int!
+  avgColor: String
 }
 
 input SubmitProductReviewInput {
@@ -4302,6 +4332,18 @@ union VerifyCustomerAccountResult =
   | MissingPasswordError
   | PasswordAlreadySetError
   | NativeAuthStrategyError
+
+type VideoSource implements Node {
+  id: ID!
+  video: AnimationVideo!
+  src: String!
+  type: String!
+}
+
+input VideoSourceInput {
+  src: String!
+  type: String!
+}
 
 type Zone implements Node {
   id: ID!

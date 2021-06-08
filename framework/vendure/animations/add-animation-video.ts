@@ -6,9 +6,10 @@ export default async function addAnimationVideo(input: any): Promise<any> {
     input,
   }
 
-  const {
-    submitAnimationVideo: { id },
-  } = await fetcher({ query: addAnimationMutation, variables })
+  const { submitAnimationVideo } = await fetcher({
+    query: addAnimationMutation,
+    variables,
+  })
 
-  return id
+  return submitAnimationVideo
 }

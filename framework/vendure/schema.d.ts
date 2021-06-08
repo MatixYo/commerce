@@ -93,14 +93,29 @@ export type AnimationVideo = Node & {
   id: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  url: Scalars['String']
   author?: Maybe<Customer>
+  videoSources: Array<VideoSource>
+  createdUsing: Scalars['String']
+  providerId: Scalars['String']
+  originalSource?: Maybe<Scalars['String']>
+  width: Scalars['Int']
+  height: Scalars['Int']
+  frameRate: Scalars['Float']
+  numFrames: Scalars['Int']
+  avgColor?: Maybe<Scalars['String']>
 }
 
 export type AnimationVideoFilterParameter = {
   createdAt?: Maybe<DateOperators>
   updatedAt?: Maybe<DateOperators>
-  url?: Maybe<StringOperators>
+  createdUsing?: Maybe<StringOperators>
+  providerId?: Maybe<StringOperators>
+  originalSource?: Maybe<StringOperators>
+  width?: Maybe<NumberOperators>
+  height?: Maybe<NumberOperators>
+  frameRate?: Maybe<NumberOperators>
+  numFrames?: Maybe<NumberOperators>
+  avgColor?: Maybe<StringOperators>
 }
 
 export type AnimationVideoList = PaginatedList & {
@@ -120,7 +135,14 @@ export type AnimationVideoSortParameter = {
   id?: Maybe<SortOrder>
   createdAt?: Maybe<SortOrder>
   updatedAt?: Maybe<SortOrder>
-  url?: Maybe<SortOrder>
+  createdUsing?: Maybe<SortOrder>
+  providerId?: Maybe<SortOrder>
+  originalSource?: Maybe<SortOrder>
+  width?: Maybe<SortOrder>
+  height?: Maybe<SortOrder>
+  frameRate?: Maybe<SortOrder>
+  numFrames?: Maybe<SortOrder>
+  avgColor?: Maybe<SortOrder>
 }
 
 export type ApplyCouponCodeResult =
@@ -2962,15 +2984,23 @@ export type StringOperators = {
 }
 
 export type SubmitAnimationItemInput = {
-  authorId?: Maybe<Scalars['ID']>
+  customerId?: Maybe<Scalars['ID']>
   title: Scalars['String']
   source?: Maybe<Scalars['String']>
   videoId: Scalars['ID']
 }
 
 export type SubmitAnimationVideoInput = {
-  url: Scalars['String']
-  authorId?: Maybe<Scalars['ID']>
+  customerId?: Maybe<Scalars['ID']>
+  videoSources: Array<VideoSourceInput>
+  createdUsing: Scalars['String']
+  providerId: Scalars['String']
+  originalSource?: Maybe<Scalars['String']>
+  width: Scalars['Int']
+  height: Scalars['Int']
+  frameRate: Scalars['Float']
+  numFrames: Scalars['Int']
+  avgColor?: Maybe<Scalars['String']>
 }
 
 export type SubmitProductReviewInput = {
@@ -3139,6 +3169,19 @@ export type VerifyCustomerAccountResult =
   | MissingPasswordError
   | PasswordAlreadySetError
   | NativeAuthStrategyError
+
+export type VideoSource = Node & {
+  __typename?: 'VideoSource'
+  id: Scalars['ID']
+  video: AnimationVideo
+  src: Scalars['String']
+  type: Scalars['String']
+}
+
+export type VideoSourceInput = {
+  src: Scalars['String']
+  type: Scalars['String']
+}
 
 export type Zone = Node & {
   __typename?: 'Zone'

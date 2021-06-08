@@ -145,17 +145,11 @@ const Uploader: FC = () => {
 
   const createItem = useCallback(async (item) => {
     try {
-      const data = await addAnimationVideo(item)
-      console.log(data)
+      const { id } = await addAnimationVideo(item)
+      await router.push(`/studio/${id}`)
     } catch (err) {
       console.log(err)
     }
-
-    /*router.push(
-      `/studio/${data.providerId}?data=${encodeURIComponent(
-        JSON.stringify(data)
-      )}`
-    )*/
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
