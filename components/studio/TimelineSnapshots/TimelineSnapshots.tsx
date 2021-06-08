@@ -20,7 +20,7 @@ const TimelineSnapshots: FC<Props> = ({
 
   useEffect(() => {
     ;(async function () {
-      if (ref.current === null) return
+      if (ref.current === null || width === 0 || height === 0) return
       if (onLoadedChange) onLoadedChange(false)
 
       const context = ref.current.getContext(`2d`)

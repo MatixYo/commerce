@@ -1,5 +1,5 @@
 .timeline {
-  @apply relative h-16 mt-8 border-2 bg-gradient-to-r from-purple-400 to-indigo-800;
+  @apply relative h-12 mt-8 border-2 bg-gradient-to-r from-purple-400 to-indigo-800;
 
   &.loaded {
     @apply animate-none;

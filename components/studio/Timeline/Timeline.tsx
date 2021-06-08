@@ -12,7 +12,6 @@ interface Props {
 
 const Timeline: FC<Props> = ({ videoSources, numFrames }) => {
   const [loaded, setLoaded] = useState(false)
-  console.log(loaded)
 
   return (
     <div
