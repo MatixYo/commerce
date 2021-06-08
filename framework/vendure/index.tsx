@@ -8,7 +8,7 @@ import {
 import { vendureProvider } from './provider'
 
 export const vendureConfig: CommerceConfig = {
-  locale: 'en-us',
+  locale: 'en',
   cartCookie: 'session',
 }
 

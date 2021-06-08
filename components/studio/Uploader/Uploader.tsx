@@ -8,6 +8,7 @@ import cn from 'classnames'
 import { afterLast } from '@lib/after-last'
 import { useRouter } from 'next/router'
 import { VideoSourceType } from '@components/studio/types'
+import addAnimationVideo from '@framework/animations/add-animation-video'
 
 const acceptedFileFormats = {
   image: ['webp', 'gif'],
@@ -29,6 +30,7 @@ const acceptedFileFormats = {
 
 type ResultType = {
   providerId: string
+  createdFrom: string
   originSource: string | null
   videoSources: [VideoSourceType]
   width: number
@@ -83,7 +85,7 @@ const Uploader: FC = () => {
       const result = await uploadToCloudinary(acceptedFiles[0], (v) =>
         setProgressVal(v)
       )
-      createItem(result)
+      createItem({ ...result, createdUsing: 'uploader' })
     } catch (err) {
       console.log(err)
     } finally {
@@ -115,7 +117,7 @@ const Uploader: FC = () => {
 
     try {
       const result = await uploadToCloudinary(file, (v) => setProgressVal(v))
-      createItem(result)
+      createItem({ ...result, createdUsing: 'url' })
     } catch (err) {
       console.log(err)
     } finally {
@@ -126,6 +128,7 @@ const Uploader: FC = () => {
   const onSelectGif = useCallback((data) => {
     const result = {
       providerId: data.gfyId,
+      createdUsing: 'gfycat',
       originalSource: 'TODO',
       videoSources: [
         { src: data.webmUrl, type: 'webm' },
@@ -140,12 +143,19 @@ const Uploader: FC = () => {
     createItem(result)
   }, [])
 
-  const createItem = useCallback((data) => {
-    router.push(
+  const createItem = useCallback(async (item) => {
+    try {
+      const data = await addAnimationVideo(item)
+      console.log(data)
+    } catch (err) {
+      console.log(err)
+    }
+
+    /*router.push(
       `/studio/${data.providerId}?data=${encodeURIComponent(
         JSON.stringify(data)
       )}`
-    )
+    )*/
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -153,6 +163,7 @@ const Uploader: FC = () => {
     multiple: false,
   })
 
+  // @ts-ignore
   return (
     <>
       <div
