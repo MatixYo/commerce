@@ -3,29 +3,34 @@ import s from './TimelineSlider.module.css'
 import { Handles, Slider, Tracks } from 'react-compound-slider'
 import { KeyboardHandle } from './KeyboardHandle'
 import { Track } from './Track'
+import { useStudio } from '@components/studio/context'
+import { KeyframeType } from '@components/studio/types'
 
-interface Props {
-  numFrames: number
-}
 const OFFSET = 0.05
 const COUNT = 4
 
-const TimelineSlider: FC<Props> = ({ numFrames }) => {
-  const [values, setValues] = useState([0, 1, 2, 3])
-  const [prevValues, setPrevValues] = useState([0, 1, 2, 3])
+export const KeyframesSlider: FC = () => {
+  const { keyframes, setKeyframes, videoItem, setCurrentFrame } = useStudio()
+  const [prevValues, setPrevValues] = useState([])
 
   useEffect(() => {
+    if (!videoItem) return
+
     const innerValues = Array.from(Array(COUNT - 2).keys()).map(
       (i) => OFFSET + (1 - 2 * OFFSET) * ((i + 1) / (COUNT - 1))
     )
 
-    setValues([
-      Math.ceil(OFFSET * numFrames),
-      ...innerValues.map((v) => Math.ceil(v * numFrames)),
-      Math.ceil((1 - OFFSET) * numFrames),
+    const { numFrames } = videoItem
+
+    setKeyframes([
+      { frameNumber: Math.ceil(OFFSET * numFrames) },
+      ...innerValues.map((v) => ({
+        frameNumber: Math.ceil(v * numFrames),
+      })),
+      { frameNumber: Math.ceil((1 - OFFSET) * numFrames) },
     ])
-  }, [numFrames])
-  const domain = [0, numFrames]
+  }, [videoItem])
+  const domain = [0, videoItem ? videoItem.numFrames : 1]
 
   const onUpdate = useCallback(
     (newValues) => {
@@ -33,9 +38,10 @@ const TimelineSlider: FC<Props> = ({ numFrames }) => {
         (v: number, i: number) => prevValues[i] !== v
       )
       setPrevValues(newValues)
+
       /* TODO przewijać też gdy jest onCLick na Handle */
       if (diff.length) {
-        console.log(`Changed ${diff}`)
+        setCurrentFrame(diff[0])
       }
     },
     [prevValues]
@@ -46,7 +52,7 @@ const TimelineSlider: FC<Props> = ({ numFrames }) => {
       mode={3}
       step={1}
       domain={domain}
-      values={values}
+      values={keyframes.map((k: KeyframeType) => k.frameNumber)}
       onUpdate={onUpdate}
       className={s.slider}
     >
@@ -83,5 +89,3 @@ const TimelineSlider: FC<Props> = ({ numFrames }) => {
     </Slider>
   )
 }
-
-export default TimelineSlider

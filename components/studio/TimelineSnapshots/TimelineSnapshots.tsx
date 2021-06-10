@@ -1,35 +1,34 @@
 import { FC, useEffect, useRef } from 'react'
-import { VideoSourceType } from '@components/studio/types'
 import VideoSnapshot from '@lib/video-snapshot'
 import { useRect } from '@lib/hooks/useRect'
 import cn from 'classnames'
+import { useStudio } from '@components/studio/context'
 
 interface Props {
   className?: string
-  videoSources: VideoSourceType[]
   onLoadedChange?: (loaded: boolean) => void
 }
 
-const TimelineSnapshots: FC<Props> = ({
-  className,
-  videoSources,
-  onLoadedChange,
-}) => {
+const TimelineSnapshots: FC<Props> = ({ className, onLoadedChange }) => {
   const ref = useRef(null)
   const { width, height } = useRect(ref)
 
+  const { videoItem } = useStudio()
+
   useEffect(() => {
     ;(async function () {
-      if (ref.current === null || width === 0 || height === 0) return
+      if (ref.current === null || width === 0 || height === 0 || !videoItem)
+        return
       if (onLoadedChange) onLoadedChange(false)
 
+      // @ts-ignore
       const context = ref.current.getContext(`2d`)
 
       if (!context) {
         throw new Error('error creating canvas context')
       }
 
-      const vs = new VideoSnapshot(videoSources)
+      const vs = new VideoSnapshot(videoItem.videoSources)
       const { videoWidth, videoHeight, duration } = await vs.getProperties()
 
       const itemWidth = (videoWidth * height) / videoHeight
@@ -42,7 +41,7 @@ const TimelineSnapshots: FC<Props> = ({
       }
       if (onLoadedChange) onLoadedChange(true)
     })()
-  }, [ref, videoSources, width, height])
+  }, [ref, videoItem, width, height])
 
   return (
     <canvas

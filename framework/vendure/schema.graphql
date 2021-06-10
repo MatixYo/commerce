@@ -3120,6 +3120,8 @@ GraphQL resolvers via the {@link Allow} decorator.
 @docsCategory common
 """
 enum Permission {
+  Placeholder
+
   """
   Authenticated means simply that the user is logged in
   """
@@ -3899,9 +3901,7 @@ type Query {
   """
   search(input: SearchInput!): SearchResponse!
   generateBraintreeClientToken(orderId: ID!): String!
-  animationsVideos(
-    options: AnimationVideoListOptions = null
-  ): AnimationVideoList!
+  animationsVideos(options: AnimationVideoListOptions): AnimationVideoList!
   animationVideo(id: ID!): AnimationVideo
 }
 

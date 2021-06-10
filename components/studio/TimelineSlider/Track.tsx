@@ -13,7 +13,7 @@ interface TrackProps {
     percent: number
   }
   getTrackProps: () => any
-  disabled: boolean
+  disabled?: boolean
 }
 
 export const Track: FC<TrackProps> = ({

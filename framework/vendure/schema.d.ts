@@ -2180,6 +2180,7 @@ export type PaymentMethodQuote = {
  * @docsCategory common
  */
 export enum Permission {
+  Placeholder = 'Placeholder',
   /** Authenticated means simply that the user is logged in */
   Authenticated = 'Authenticated',
   /** SuperAdmin has unrestricted access to all operations */
@@ -3403,6 +3404,31 @@ export type GetAllProductsQuery = { __typename?: 'Query' } & {
   search: { __typename?: 'SearchResponse' } & {
     items: Array<{ __typename?: 'SearchResult' } & SearchResultFragment>
   }
+}
+
+export type GetAnimationVideoQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type GetAnimationVideoQuery = { __typename?: 'Query' } & {
+  animationVideo?: Maybe<
+    { __typename?: 'AnimationVideo' } & Pick<
+      AnimationVideo,
+      | 'id'
+      | 'createdUsing'
+      | 'providerId'
+      | 'originalSource'
+      | 'width'
+      | 'height'
+      | 'frameRate'
+      | 'numFrames'
+      | 'avgColor'
+    > & {
+        videoSources: Array<
+          { __typename?: 'VideoSource' } & Pick<VideoSource, 'src' | 'type'>
+        >
+      }
+  >
 }
 
 export type ActiveOrderQueryVariables = Exact<{ [key: string]: never }>

@@ -7,10 +7,11 @@ import { motion } from 'framer-motion'
 import VideoCropper from '@components/studio/VideoEditor/VideoCropper'
 import TimelineSnapshots from '@components/studio/TimelineSnapshots'
 import { useEffect, useMemo, useState } from 'react'
-import { VideoSourceType } from '@components/studio/types'
+import { VideoItemType, VideoSourceType } from '@components/studio/types'
 import cn from 'classnames'
 import Timeline from '@components/studio/Timeline'
 import getAnimationVideo from '@framework/animations/get-animation-video'
+import { ManagedStudioContext, useStudio } from '@components/studio/context'
 
 export async function getStaticProps({
   preview,
@@ -33,44 +34,39 @@ export async function getStaticPaths() {
   }
 }
 
+const OFFSET = 0.05
+
 export default function StudioEdit() {
   const router = useRouter()
 
-  const [videoId, projectId] = router.query.slug as String[]
+  const { videoItem, setVideoItem, setCurrentFrame } = useStudio()
 
-  const [data, setData] = useState({})
+  const [videoId, projectId] = router.query.slug as [string, string]
 
   useEffect(() => {
     ;(async () => {
-      const nextData = await getAnimationVideo(videoId)
-      nextData.videoSources = (nextData.videoSources || []).map(
-        (item: VideoSourceType) => ({
-          src: item.src,
-          type: `video/${item.type}`,
-        })
-      )
-      setData(nextData)
+      let item = videoItem
+      if (!item) {
+        item = await getAnimationVideo(videoId)
+        setVideoItem(item)
+      }
+
+      setCurrentFrame(Math.ceil(OFFSET * item.numFrames))
     })()
-  }, [videoId])
+  }, [videoItem, videoId])
 
   return (
     <Container>
       <Text variant="pageHeading">Creator Studio</Text>
-      {data.hasOwnProperty('id') && (
+      {videoItem && (
         <>
           <motion.div
             className="relative mx-auto h-64 w-96"
-            layoutId={`video-${data.providerId}`}
+            layoutId={`video-${videoItem.providerId}`}
           >
-            <VideoCropper
-              videoSources={data.videoSources}
-              classes={{ mediaClassName: 'h-64 w-96' }}
-            />
+            <VideoCropper classes={{ mediaClassName: 'h-64 w-96' }} />
           </motion.div>
-          <Timeline
-            videoSources={data.videoSources}
-            numFrames={data.numFrames}
-          />
+          <Timeline />
         </>
       )}
     </Container>

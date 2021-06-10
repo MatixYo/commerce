@@ -3,7 +3,7 @@
 }
 
 .handle {
-  @apply absolute w-10 h-10 -bottom-0.5 bg-indigo-300 opacity-90 z-10 transform-gpu -translate-x-2/4 translate-y-full rounded-full border border-transparent;
+  @apply absolute w-10 h-10 -bottom-0.5 bg-indigo-300 opacity-90 z-10 transform-gpu -translate-x-2/4 translate-y-full rounded-full border border-transparent cursor-move;
 
   &:first-child {
      @apply rounded-tr-none -translate-x-full bg-blue;
@@ -14,7 +14,12 @@
 
   &:not(:first-child):not(:last-child) {
     @apply rounded-tr-none translate-y-12 -rotate-45;
-   }
+
+    &:after {
+      content: "";
+      @apply absolute -top-px -right-px h-12 w-px bg-gray-600 opacity-80 transform-gpu origin-bottom -translate-y-full translate-x-2/4 rotate-45;
+     }
+  }
 
   &:focus {
      @apply z-20 outline-none ring-2 ring-offset-2 ring-purple-600 ring-offset-accents-0;
@@ -23,6 +28,14 @@
   &.disabled {
     @apply bg-indigo-600;
   }
+}
+
+.scrubber {
+  @apply absolute w-8 h-8 top-0 bg-white transform-gpu -translate-y-full -translate-x-2/4;
+}
+
+.rail {
+  @apply absolute h-11 inset-0 z-20 cursor-pointer;
 }
 
 .track {

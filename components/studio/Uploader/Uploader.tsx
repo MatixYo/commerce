@@ -7,8 +7,9 @@ import request from 'superagent'
 import cn from 'classnames'
 import { afterLast } from '@lib/after-last'
 import { useRouter } from 'next/router'
-import { VideoSourceType } from '@components/studio/types'
+import { VideoItemType } from '@components/studio/types'
 import addAnimationVideo from '@framework/animations/add-animation-video'
+import { useStudio } from '@components/studio/context'
 
 const acceptedFileFormats = {
   image: ['webp', 'gif'],
@@ -28,22 +29,10 @@ const acceptedFileFormats = {
   ],
 }
 
-type ResultType = {
-  providerId: string
-  createdFrom: string
-  originSource: string | null
-  videoSources: [VideoSourceType]
-  width: number
-  height: number
-  frameRate: number
-  numFrames: number
-  avgColor: string | null
-}
-
 async function uploadToCloudinary(
-  file: File,
+  file: File | string,
   onProgress: (progressVal: number) => void
-): Promise<ResultType> {
+): Promise<VideoItemType> {
   if (!process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)
     throw new Error('Missing param NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET')
 
@@ -62,9 +51,10 @@ async function uploadToCloudinary(
 
   return {
     providerId: body.asset_id,
+    createdUsing: typeof file === 'string' ? 'url' : 'uploader',
     videoSources: body.eager.map((e: any) => ({
       src: e.secure_url,
-      type: e.format,
+      type: `video/${e.format}`,
     })),
     width: body.width,
     height: body.height,
@@ -77,15 +67,16 @@ async function uploadToCloudinary(
 
 const Uploader: FC = () => {
   const { t } = useTranslation('studio')
-  const [progressVal, setProgressVal] = useState(null)
+  const [progressVal, setProgressVal] = useState<null | number>(null)
   const router = useRouter()
+  const { setVideoItem } = useStudio()
 
   const onDrop = useCallback(async (acceptedFiles) => {
     try {
       const result = await uploadToCloudinary(acceptedFiles[0], (v) =>
         setProgressVal(v)
       )
-      createItem({ ...result, createdUsing: 'uploader' })
+      await createItem(result)
     } catch (err) {
       console.log(err)
     } finally {
@@ -117,7 +108,7 @@ const Uploader: FC = () => {
 
     try {
       const result = await uploadToCloudinary(file, (v) => setProgressVal(v))
-      createItem({ ...result, createdUsing: 'url' })
+      await createItem(result)
     } catch (err) {
       console.log(err)
     } finally {
@@ -125,14 +116,14 @@ const Uploader: FC = () => {
     }
   }, [])
 
-  const onSelectGif = useCallback((data) => {
+  const onSelectGif = useCallback(async (data) => {
     const result = {
       providerId: data.gfyId,
       createdUsing: 'gfycat',
       originalSource: 'TODO',
       videoSources: [
-        { src: data.webmUrl, type: 'webm' },
-        { src: data.mp4Url, type: 'mp4' },
+        { src: data.webmUrl, type: 'video/webm' },
+        { src: data.mp4Url, type: 'video/mp4' },
       ],
       width: data.width,
       height: data.height,
@@ -140,17 +131,21 @@ const Uploader: FC = () => {
       numFrames: data.numFrames,
       avgColor: data.avgColor,
     }
-    createItem(result)
+    await createItem(result)
   }, [])
 
-  const createItem = useCallback(async (item) => {
-    try {
-      const { id } = await addAnimationVideo(item)
-      await router.push(`/studio/${id}`)
-    } catch (err) {
-      console.log(err)
-    }
-  }, [])
+  const createItem = useCallback(
+    async (item) => {
+      try {
+        setVideoItem(item)
+        const { id } = await addAnimationVideo(item)
+        await router.push(`/studio/${id}`)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    [setVideoItem]
+  )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

@@ -1,16 +1,14 @@
 import { FC, useState } from 'react'
-import { VideoSourceType } from '@components/studio/types'
 import cn from 'classnames'
 import s from './Timeline.module.css'
 import TimelineSnapshots from '@components/studio/TimelineSnapshots'
-import TimelineSlider from '@components/studio/TimelineSlider'
+import {
+  KeyframesSlider,
+  ScrubberSlider,
+} from '@components/studio/TimelineSlider'
+import { useStudio } from '@components/studio/context'
 
-interface Props {
-  videoSources: VideoSourceType[]
-  numFrames: number
-}
-
-const Timeline: FC<Props> = ({ videoSources, numFrames }) => {
+const Timeline: FC = () => {
   const [loaded, setLoaded] = useState(false)
 
   return (
@@ -20,13 +18,13 @@ const Timeline: FC<Props> = ({ videoSources, numFrames }) => {
       })}
     >
       <TimelineSnapshots
-        videoSources={videoSources}
         onLoadedChange={(loaded: boolean) => {
           setLoaded(loaded)
         }}
         className={cn('rounded-xl', { [s.transparent]: !loaded })}
       />
-      <TimelineSlider numFrames={numFrames} />
+      <ScrubberSlider />
+      <KeyframesSlider />
     </div>
   )
 }

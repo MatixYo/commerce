@@ -8,6 +8,7 @@ interface HandleProps {
   handle: SliderItem
   getHandleProps: GetHandleProps
   disabled?: boolean
+  className?: string
 }
 
 export const KeyboardHandle: FC<HandleProps> = ({
@@ -15,6 +16,7 @@ export const KeyboardHandle: FC<HandleProps> = ({
   handle: { id, value, percent },
   disabled = false,
   getHandleProps,
+  className = s.handle,
 }) => {
   return (
     <button
@@ -25,7 +27,7 @@ export const KeyboardHandle: FC<HandleProps> = ({
       style={{
         left: `${percent}%`,
       }}
-      className={cn(s.handle, { [s.disabled]: disabled })}
+      className={cn(className, { [s.disabled]: disabled })}
       {...getHandleProps(id)}
     />
   )

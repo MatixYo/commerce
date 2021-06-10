@@ -1,1 +1,2 @@
-export { default } from './TimelineSlider'
+export { KeyframesSlider } from './KeyframesSlider'
+export { ScrubberSlider } from './ScrubberSlider'

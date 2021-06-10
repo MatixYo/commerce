@@ -4,6 +4,7 @@ import commerce from '@lib/api/commerce'
 import { Layout } from '@components/common'
 import { Container, Text } from '@components/ui'
 import Uploader from '@components/studio/Uploader'
+import { ManagedStudioContext } from '@components/studio/context'
 
 export async function getStaticProps({
   preview,

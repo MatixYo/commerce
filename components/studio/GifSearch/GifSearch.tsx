@@ -42,7 +42,7 @@ const breakpointColumnsObj = {
 interface Props {
   className?: string
   id?: string
-  onSelectGif: () => void
+  onSelectGif: (data: any) => Promise<void>
 }
 
 const GifSearch: FC<Props> = ({
