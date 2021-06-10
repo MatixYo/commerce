@@ -31,11 +31,11 @@
 }
 
 .scrubber {
-  @apply absolute w-8 h-6 top-0 bg-accents-5 transform-gpu -translate-y-full -translate-x-2/4 rounded-t z-30;
+  @apply absolute w-6 h-5 top-0 bg-accents-5 transform-gpu -translate-y-full -translate-x-2/4 rounded-t z-30;
 
   &:after {
     content: "";
-    @apply absolute mx-auto bottom-0 inset-x-0 w-5 h-5 transform-gpu translate-y-2/4 rotate-45;
+    @apply absolute mx-auto bottom-0 inset-x-0 w-4 h-4 transform-gpu translate-y-2/4 rotate-45;
     background-color: inherit;
   }
 }
@@ -45,7 +45,7 @@
 }
 
 .track {
-  @apply absolute h-11 bg-gray-600 opacity-90 backdrop-filter backdrop-blur-md;
+  @apply absolute h-9 bg-gray-600 opacity-80 backdrop-filter backdrop-blur-md;
 
   &:first-child {
     @apply rounded-r-sm rounded-l-lg;

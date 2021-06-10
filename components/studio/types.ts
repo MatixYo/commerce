@@ -20,9 +20,16 @@ export type VideoItemType = {
   avgColor: string | null
 }
 
-export type KeyframeType = {
-  frameNumber: number
-}
+export type KeyframeType =
+  | {
+      frameNumber: number
+      canvas?: HTMLCanvasElement
+    }
+  | {
+      frameNumber: number
+      originalCanvas: HTMLCanvasElement
+      croppedCanvas: HTMLCanvasElement
+    }
 
 export type CroppedAreaType = {
   width: number

@@ -39,7 +39,7 @@ const OFFSET = 0.05
 export default function StudioEdit() {
   const router = useRouter()
 
-  const { videoItem, setVideoItem, setCurrentFrame } = useStudio()
+  const { videoItem, setVideoItem, setCurrentFrame, keyframes } = useStudio()
 
   const [videoId, projectId] = router.query.slug as [string, string]
 
@@ -54,6 +54,12 @@ export default function StudioEdit() {
       setCurrentFrame(Math.ceil(OFFSET * item.numFrames))
     })()
   }, [videoItem, videoId])
+
+  useEffect(() => {
+    if (!videoItem || !keyframes) return
+
+    /* TODO */
+  }, [videoItem, keyframes])
 
   return (
     <Container>

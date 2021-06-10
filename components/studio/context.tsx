@@ -46,6 +46,11 @@ type Action =
       frameNumber: number
     }
   | {
+      type: 'SET_KEYFRAME_CANVAS'
+      frameNumber: number
+      canvas: HTMLCanvasElement
+    }
+  | {
       type: 'ROTATE_CW'
     }
   | {
@@ -96,6 +101,19 @@ function studioReducer(state: State, action: Action) {
         ),
       }
     }
+    case 'SET_KEYFRAME_CANVAS': {
+      return {
+        ...state,
+        keyframes: state.keyframes.map((keyframe) =>
+          keyframe.frameNumber === action.frameNumber
+            ? {
+                ...keyframe,
+                canvas: action.canvas,
+              }
+            : keyframe
+        ),
+      }
+    }
   }
 }
 
@@ -115,6 +133,8 @@ export const StudioProvider: FC = (props) => {
     dispatch({ type: 'ADD_KEYFRAME', keyframe })
   const deleteKeyframe = (frameNumber: number) =>
     dispatch({ type: 'DELETE_KEYFRAME', frameNumber })
+  const setKeyframeCanvas = (frameNumber: number) =>
+    dispatch({ type: 'SET_KEYFRAME_CANVAS', frameNumber })
 
   const value = useMemo(
     () => ({
@@ -125,6 +145,7 @@ export const StudioProvider: FC = (props) => {
       setKeyframes,
       addKeyframe,
       deleteKeyframe,
+      setKeyframeCanvas,
     }),
     [state]
   )

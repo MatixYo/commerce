@@ -6,7 +6,6 @@ import {
   KeyframesSlider,
   ScrubberSlider,
 } from '@components/studio/TimelineSlider'
-import { useStudio } from '@components/studio/context'
 
 const Timeline: FC = () => {
   const [loaded, setLoaded] = useState(false)
