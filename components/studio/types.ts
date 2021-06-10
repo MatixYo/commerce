@@ -11,7 +11,7 @@ export type VideoSourceType = {
 export type VideoItemType = {
   providerId: string
   createdUsing: CreatedUsingType
-  originSource: string | null
+  originalSource: string | null
   videoSources: [VideoSourceType]
   width: number
   height: number

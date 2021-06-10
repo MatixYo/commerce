@@ -1,0 +1,10 @@
+.container {
+  @apply relative mx-auto bg-white;
+  width: 750px;
+  height: 500px;
+}
+
+.cropArea {
+  width: 100% !important;
+  height: 100% !important;
+}

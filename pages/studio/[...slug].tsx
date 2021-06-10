@@ -60,12 +60,7 @@ export default function StudioEdit() {
       <Text variant="pageHeading">Creator Studio</Text>
       {videoItem && (
         <>
-          <motion.div
-            className="relative mx-auto h-64 w-96"
-            layoutId={`video-${videoItem.providerId}`}
-          >
-            <VideoCropper classes={{ mediaClassName: 'h-64 w-96' }} />
-          </motion.div>
+          <VideoCropper />
           <Timeline />
         </>
       )}

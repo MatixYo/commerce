@@ -3,7 +3,7 @@
 }
 
 .handle {
-  @apply absolute w-10 h-10 -bottom-0.5 bg-indigo-300 opacity-90 z-10 transform-gpu -translate-x-2/4 translate-y-full rounded-full border border-transparent cursor-move;
+  @apply absolute w-8 h-8 -bottom-0.5 bg-indigo-300 opacity-90 z-10 transform-gpu -translate-x-2/4 translate-y-full rounded-full border border-transparent cursor-move;
 
   &:first-child {
      @apply rounded-tr-none -translate-x-full bg-blue;
@@ -13,7 +13,7 @@
   }
 
   &:not(:first-child):not(:last-child) {
-    @apply rounded-tr-none translate-y-12 -rotate-45;
+    @apply rounded-tr-none translate-y-10 -rotate-45;
 
     &:after {
       content: "";
@@ -31,7 +31,13 @@
 }
 
 .scrubber {
-  @apply absolute w-8 h-8 top-0 bg-white transform-gpu -translate-y-full -translate-x-2/4;
+  @apply absolute w-8 h-6 top-0 bg-accents-5 transform-gpu -translate-y-full -translate-x-2/4 rounded-t z-30;
+
+  &:after {
+    content: "";
+    @apply absolute mx-auto bottom-0 inset-x-0 w-5 h-5 transform-gpu translate-y-2/4 rotate-45;
+    background-color: inherit;
+  }
 }
 
 .rail {

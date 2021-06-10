@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 interface Props {
   className?: string
   data: {
+    gfyId: string
     gif100px: string
     gfyName: string
     width: number
@@ -26,6 +27,7 @@ export const GifItem: FC<Props> = ({ className, data, onClick }) => {
       onLoad={() => setIsLoaded(true)}
       onClick={() => onClick && onClick()}
       style={{
+        // @ts-ignore
         '--aspect-ratio': data.width / data.height,
         backgroundColor: data.avgColor,
       }}

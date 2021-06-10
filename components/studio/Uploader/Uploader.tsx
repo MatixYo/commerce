@@ -52,6 +52,7 @@ async function uploadToCloudinary(
   return {
     providerId: body.asset_id,
     createdUsing: typeof file === 'string' ? 'url' : 'uploader',
+    originalSource: typeof file === 'string' ? file : null,
     videoSources: body.eager.map((e: any) => ({
       src: e.secure_url,
       type: `video/${e.format}`,
@@ -61,7 +62,6 @@ async function uploadToCloudinary(
     frameRate: body.frame_rate,
     numFrames: body.nb_frames,
     avgColor: null, //Cloudinary doesn't provide average color
-    originSource: null, //TODO may be provided by user
   }
 }
 
