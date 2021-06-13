@@ -39,11 +39,11 @@ module.exports = {
         'accents-9': 'var(--accents-9)',
         violet: 'var(--violet)',
         'violet-light': 'var(--violet-light)',
-        pink: 'var(--pink)',
         cyan: 'var(--cyan)',
+        /*pink: 'var(--pink)',
         blue: 'var(--blue)',
         green: 'var(--green)',
-        red: 'var(--red)',
+        red: 'var(--red)',*/
       },
       textColor: {
         base: 'var(--text-base)',
