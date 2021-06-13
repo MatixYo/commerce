@@ -32,6 +32,7 @@ class VideoSnapshot {
       return this.video
     }
 
+    //@ts-ignore
     if (!this.video?.videoWidth || !this.video?.videoHeight) {
       throw new Error('error retrieving video dimensions')
     }
@@ -42,13 +43,14 @@ class VideoSnapshot {
   // TODO: implement video cache
   private loadVideo = (time: number = 0): Promise<HTMLVideoElement> =>
     new Promise(async (resolve, reject) => {
-      if (typeof this.videoSources === 'undefined')
+      if (!this.videoSources)
         reject(new Error('video sources have not been provided'))
       const video = document.createElement('video')
 
       video.preload = 'metadata'
       video.muted = true
 
+      //@ts-ignore
       const sourcesElements = this.videoSources.map(({ src, type }) => {
         const sourceEl = document.createElement('source')
         sourceEl.src = src
@@ -81,8 +83,11 @@ class VideoSnapshot {
     if (!this.video) await this.loadVideo()
 
     return {
+      //@ts-ignore
       videoWidth: this.video?.videoWidth,
+      //@ts-ignore
       videoHeight: this.video?.videoHeight,
+      //@ts-ignore
       duration: this.video?.duration,
     }
   }
