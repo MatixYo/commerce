@@ -13,6 +13,9 @@ const isVendure = provider === 'vendure'
 
 module.exports = nextTranslate(
   withCommerceConfig({
+    future: {
+      webpack5: true,
+    },
     commerce,
     rewrites() {
       return [
@@ -48,9 +51,6 @@ module.exports = nextTranslate(
           destination: '/search',
         },
       ].filter(Boolean)
-    },
-    future: {
-      webpack5: true,
     },
   })
 )

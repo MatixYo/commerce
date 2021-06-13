@@ -50,18 +50,18 @@ export const handler: SWRHook<SearchProductsHook> = {
       })
       // filter on client when brandId & categoryId are set since is not available on collection product query
       products = brandId
-        ? data.node.products.edges.filter(
+        ? data.node?.products?.edges?.filter(
             ({ node: { vendor } }: ProductEdge) =>
               vendor.replace(/\s+/g, '-').toLowerCase() === brandId
           )
-        : data.node.products.edges
+        : data.node?.products?.edges
     } else {
       const data = await fetch<GetAllProductsQuery>({
         query: options.query,
         method,
         variables,
       })
-      products = data.products.edges
+      products = data.products?.edges
     }
 
     return {
@@ -71,19 +71,21 @@ export const handler: SWRHook<SearchProductsHook> = {
       found: !!products?.length,
     }
   },
-  useHook: ({ useData }) => (input = {}) => {
-    return useData({
-      input: [
-        ['search', input.search],
-        ['categoryId', input.categoryId],
-        ['brandId', input.brandId],
-        ['sort', input.sort],
-        ['locale', input.locale],
-      ],
-      swrOptions: {
-        revalidateOnFocus: false,
-        ...input.swrOptions,
-      },
-    })
-  },
+  useHook:
+    ({ useData }) =>
+    (input = {}) => {
+      return useData({
+        input: [
+          ['search', input.search],
+          ['categoryId', input.categoryId],
+          ['brandId', input.brandId],
+          ['sort', input.sort],
+          ['locale', input.locale],
+        ],
+        swrOptions: {
+          revalidateOnFocus: false,
+          ...input.swrOptions,
+        },
+      })
+    },
 }
