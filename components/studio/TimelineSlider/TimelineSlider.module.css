@@ -54,3 +54,7 @@
     @apply rounded-l-sm rounded-r-lg;
   }
 }
+
+.canvas {
+  @apply absolute top-0 transform-gpu translate-y-3/4 -translate-x-2/4;
+}

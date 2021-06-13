@@ -1,13 +1,8 @@
 import Cropper from 'react-easy-crop'
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useStudio } from '@components/studio/context'
 import { motion } from 'framer-motion'
 import s from './VideoEditor.module.css'
-
-type VideoSourceType = {
-  src: string
-  type: string
-}
 
 interface Props {
   children?: any

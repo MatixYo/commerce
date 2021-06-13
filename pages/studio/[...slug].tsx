@@ -6,12 +6,13 @@ import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
 import VideoCropper from '@components/studio/VideoEditor/VideoCropper'
 import TimelineSnapshots from '@components/studio/TimelineSnapshots'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { VideoItemType, VideoSourceType } from '@components/studio/types'
 import cn from 'classnames'
 import Timeline from '@components/studio/Timeline'
 import getAnimationVideo from '@framework/animations/get-animation-video'
 import { ManagedStudioContext, useStudio } from '@components/studio/context'
+import VideoSnapshot from '@lib/video-snapshot'
 
 export async function getStaticProps({
   preview,
@@ -39,7 +40,14 @@ const OFFSET = 0.05
 export default function StudioEdit() {
   const router = useRouter()
 
-  const { videoItem, setVideoItem, setCurrentFrame, keyframes } = useStudio()
+  const {
+    videoItem,
+    setVideoItem,
+    setCurrentFrame,
+    keyframes,
+    updateKeyframe,
+    unsetVideoItem,
+  } = useStudio()
 
   const [videoId, projectId] = router.query.slug as [string, string]
 
@@ -55,11 +63,50 @@ export default function StudioEdit() {
     })()
   }, [videoItem, videoId])
 
-  useEffect(() => {
-    if (!videoItem || !keyframes) return
+  const videoSnapshot = useRef<VideoSnapshot | null>(null)
 
-    /* TODO */
-  }, [videoItem, keyframes])
+  useEffect(() => {
+    if (!videoItem) return
+
+    videoSnapshot.current = new VideoSnapshot(videoItem.videoSources)
+  }, [videoItem])
+
+  useEffect(() => {
+    if (!videoItem || !keyframes || !videoSnapshot.current) return
+    ;(async () => {
+      const { videoWidth, videoHeight } =
+        await videoSnapshot.current?.getProperties()
+
+      for (const keyframe of keyframes) {
+        if (!keyframe.canvas) {
+          const canvas = document.createElement('canvas')
+          canvas.width = videoWidth
+          canvas.height = videoHeight
+
+          const context = canvas.getContext('2d')
+          if (!context) throw new Error('error creating canvas context')
+
+          const video = await videoSnapshot.current.takeSnapshot(
+            keyframe.frameNumber / videoItem.frameRate
+          )
+          context.drawImage(video, 0, 0, videoWidth, videoHeight)
+
+          updateKeyframe({
+            ...keyframe,
+            canvas,
+          })
+        }
+      }
+    })()
+  }, [videoItem, keyframes, videoSnapshot])
+
+  useEffect(() => console.log(keyframes), [keyframes])
+
+  useEffect(() => {
+    return () => {
+      unsetVideoItem()
+    }
+  }, [])
 
   return (
     <Container>

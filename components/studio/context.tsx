@@ -34,8 +34,8 @@ type Action =
       frameNumber: number
     }
   | {
-      type: 'SET_KEYFRAMES'
-      keyframes: KeyframeType[]
+      type: 'UPDATE_KEYFRAME'
+      keyframe: KeyframeType
     }
   | {
       type: 'ADD_KEYFRAME'
@@ -46,9 +46,8 @@ type Action =
       frameNumber: number
     }
   | {
-      type: 'SET_KEYFRAME_CANVAS'
-      frameNumber: number
-      canvas: HTMLCanvasElement
+      type: 'UPDATE_KEYFRAMES'
+      keyframes: KeyframeType[]
     }
   | {
       type: 'ROTATE_CW'
@@ -73,6 +72,7 @@ function studioReducer(state: State, action: Action) {
       return {
         ...state,
         videoItem: undefined,
+        keyframes: undefined,
       }
     }
     case 'SET_CURRENT_FRAME': {
@@ -81,16 +81,29 @@ function studioReducer(state: State, action: Action) {
         currentFrame: action.frameNumber,
       }
     }
-    case 'SET_KEYFRAMES': {
+    case 'UPDATE_KEYFRAME': {
       return {
         ...state,
-        keyframes: action.keyframes,
+        keyframes: state.keyframes.map((keyframe) =>
+          keyframe.frameNumber === action.keyframe.frameNumber
+            ? {
+                ...keyframe,
+                ...action.keyframe,
+              }
+            : keyframe
+        ),
       }
     }
     case 'ADD_KEYFRAME': {
+      /* Here we prevent from adding duplicates and sorting keyframes after adding new one's */
       return {
         ...state,
-        keyframes: [...state.keyframes, action.keyframe],
+        keyframes: [
+          ...state.keyframes.filter(
+            (keyframe) => keyframe.frameNumber !== action.keyframe.frameNumber
+          ),
+          action.keyframe,
+        ].sort((a, b) => a.frameNumber - b.frameNumber),
       }
     }
     case 'DELETE_KEYFRAME': {
@@ -101,17 +114,20 @@ function studioReducer(state: State, action: Action) {
         ),
       }
     }
-    case 'SET_KEYFRAME_CANVAS': {
+    case 'UPDATE_KEYFRAMES': {
       return {
         ...state,
-        keyframes: state.keyframes.map((keyframe) =>
-          keyframe.frameNumber === action.frameNumber
+        keyframes: action.keyframes.map((nextKeyframe) => {
+          const prevKeyframe = state.keyframes.find(
+            (keyframe) => nextKeyframe.frameNumber === keyframe.frameNumber
+          )
+          return typeof prevKeyframe !== 'undefined'
             ? {
-                ...keyframe,
-                canvas: action.canvas,
+                ...prevKeyframe,
+                ...nextKeyframe,
               }
-            : keyframe
-        ),
+            : nextKeyframe
+        }),
       }
     }
   }
@@ -127,14 +143,14 @@ export const StudioProvider: FC = (props) => {
   const setCurrentFrame = (frameNumber: number) =>
     dispatch({ type: 'SET_CURRENT_FRAME', frameNumber })
 
-  const setKeyframes = (keyframes: KeyframeType[]) =>
-    dispatch({ type: 'SET_KEYFRAMES', keyframes })
+  const updateKeyframe = (keyframe: KeyframeType) =>
+    dispatch({ type: 'UPDATE_KEYFRAME', keyframe })
   const addKeyframe = (keyframe: KeyframeType) =>
     dispatch({ type: 'ADD_KEYFRAME', keyframe })
   const deleteKeyframe = (frameNumber: number) =>
     dispatch({ type: 'DELETE_KEYFRAME', frameNumber })
-  const setKeyframeCanvas = (frameNumber: number) =>
-    dispatch({ type: 'SET_KEYFRAME_CANVAS', frameNumber })
+  const updateKeyframes = (keyframes: KeyframeType[]) =>
+    dispatch({ type: 'UPDATE_KEYFRAMES', keyframes })
 
   const value = useMemo(
     () => ({
@@ -142,10 +158,10 @@ export const StudioProvider: FC = (props) => {
       setVideoItem,
       unsetVideoItem,
       setCurrentFrame,
-      setKeyframes,
+      updateKeyframe,
       addKeyframe,
       deleteKeyframe,
-      setKeyframeCanvas,
+      updateKeyframes,
     }),
     [state]
   )

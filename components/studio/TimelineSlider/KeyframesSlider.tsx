@@ -10,7 +10,7 @@ const OFFSET = 0.05
 const COUNT = 4
 
 export const KeyframesSlider: FC = () => {
-  const { keyframes, setKeyframes, videoItem, setCurrentFrame } = useStudio()
+  const { keyframes, updateKeyframes, videoItem, setCurrentFrame } = useStudio()
   const [prevValues, setPrevValues] = useState([])
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const KeyframesSlider: FC = () => {
 
     const { numFrames } = videoItem
 
-    setKeyframes([
+    updateKeyframes([
       { frameNumber: Math.ceil(OFFSET * numFrames) },
       ...innerValues.map((v) => ({
         frameNumber: Math.ceil(v * numFrames),
@@ -33,18 +33,27 @@ export const KeyframesSlider: FC = () => {
   const domain = [0, videoItem ? videoItem.numFrames : 1]
 
   const onUpdate = useCallback(
-    (newValues) => {
-      const diff = newValues.filter(
+    (nextValues) => {
+      const diff = nextValues.filter(
         (v: number, i: number) => prevValues[i] !== v
       )
-      setPrevValues(newValues)
+      setPrevValues(nextValues)
 
       /* TODO przewijać też gdy jest onCLick na Handle */
       if (diff.length) {
         setCurrentFrame(diff[0])
       }
     },
-    [prevValues]
+    [prevValues, keyframes]
+  )
+
+  const onChange = useCallback(
+    (nextValues) => {
+      updateKeyframes(
+        nextValues.map((frameNumber: KeyframeType) => ({ frameNumber }))
+      )
+    },
+    [keyframes]
   )
 
   return (
@@ -54,6 +63,7 @@ export const KeyframesSlider: FC = () => {
       domain={domain}
       values={keyframes.map((k: KeyframeType) => k.frameNumber)}
       onUpdate={onUpdate}
+      onChange={onChange}
       className={s.slider}
     >
       <Tracks>

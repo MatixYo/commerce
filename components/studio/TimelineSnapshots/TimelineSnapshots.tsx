@@ -22,8 +22,7 @@ const TimelineSnapshots: FC<Props> = ({ className, onLoadedChange }) => {
       if (onLoadedChange) onLoadedChange(false)
 
       // @ts-ignore
-      const context = ref.current.getContext(`2d`)
-
+      const context = ref.current.getContext('2d')
       if (!context) {
         throw new Error('error creating canvas context')
       }
