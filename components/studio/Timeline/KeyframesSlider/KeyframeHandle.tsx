@@ -1,9 +1,9 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useMemo, useRef } from 'react'
 import { GetHandleProps, SliderItem } from 'react-compound-slider'
-import s from './TimelineSlider.module.css'
+import s from './KeyframesSlider.module.css'
 import cn from 'classnames'
 import { useStudio } from '@components/studio/context'
-import { KeyframeType } from '@components/studio/types'
+import { SnapshotType } from '@components/studio/types'
 
 interface HandleProps {
   domain: number[]
@@ -16,7 +16,7 @@ interface HandleProps {
 const WIDTH = 80
 const HEIGHT = 60
 
-export const KeyboardHandle: FC<HandleProps> = ({
+export const KeyframeHandle: FC<HandleProps> = ({
   domain: [min, max],
   handle: { id, value, percent },
   disabled = false,
@@ -24,44 +24,43 @@ export const KeyboardHandle: FC<HandleProps> = ({
   className = s.handle,
 }) => {
   const canvasRef = useRef(null)
-  const { keyframes } = useStudio()
+  const { snapshots, setCurrentFrame, deleteKeyframe } = useStudio()
 
   useEffect(() => {
-    if (!keyframes || !canvasRef) return
-
-    const keyframe = keyframes.find(
-      (keyframe: KeyframeType) => keyframe.frameNumber === value
+    const snapshot = snapshots.find(
+      (snapshot: SnapshotType) => snapshot[0] === value
     )
 
-    if (!keyframe?.canvas?.width || !keyframe?.canvas?.height) return
+    if (!snapshot?.[1]?.width || !snapshot?.[1]?.height || !canvasRef) return
 
+    //@ts-ignore
     const context = canvasRef.current?.getContext('2d')
-    console.log('really redrawing', keyframe)
-    context.drawImage(keyframe.canvas, 0, 0, WIDTH, HEIGHT)
-  }, [keyframes, canvasRef, value])
+    context.drawImage(snapshot[1], 0, 0, WIDTH, HEIGHT)
+  }, [canvasRef, snapshots, value])
 
   return (
-    <>
+    <div
+      className={s.handleContainer}
+      style={{
+        left: `${percent}%`,
+      }}
+      {...getHandleProps(id)}
+    >
       <button
         role="slider"
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
-        style={{
-          left: `${percent}%`,
-        }}
         className={cn(className, { [s.disabled]: disabled })}
-        {...getHandleProps(id)}
+        onPointerDown={() => setCurrentFrame(value)}
       />
       <canvas
         ref={canvasRef}
         className={s.canvas}
-        style={{
-          left: `${percent}%`,
-        }}
         width={WIDTH}
         height={HEIGHT}
+        onPointerDown={() => deleteKeyframe(value)}
       />
-    </>
+    </div>
   )
 }

@@ -1,15 +1,14 @@
-.timeline {
-  @apply relative h-10 mt-12 mb-32 border-2 bg-gradient-to-r from-purple-400 to-indigo-800;
-
-  &.loaded {
-    @apply animate-none;
+.container {
+  @apply relative h-10 mt-12 mb-32 rounded-xl border-2;
+  & > * {
+    border-radius: inherit;
   }
 }
 
-.transparent {
-  @apply opacity-0;
+.background, .snapshots {
+  @apply absolute inset-0;
+  border-radius: inherit;
 }
-
-.timeline, .skeleton {
-  @apply rounded-xl;
+.background {
+  @apply bg-gradient-to-r from-purple-400 to-indigo-800;
 }

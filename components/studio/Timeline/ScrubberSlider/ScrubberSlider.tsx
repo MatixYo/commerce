@@ -1,11 +1,10 @@
-import { FC, useCallback, useEffect, useState } from 'react'
-import s from './TimelineSlider.module.css'
-import { Handles, Rail, Slider, Tracks } from 'react-compound-slider'
-import { KeyboardHandle } from './KeyboardHandle'
-import { Track } from './Track'
+import { FC } from 'react'
+import s from './ScrubberSlider.module.css'
+import { Handles, Rail, Slider } from 'react-compound-slider'
 import { useStudio } from '@components/studio/context'
+import { ScrubberHandle } from './'
 
-export const ScrubberSlider: FC = () => {
+const ScrubberSlider: FC = () => {
   const { videoItem, currentFrame, setCurrentFrame } = useStudio()
 
   const domain = [0, videoItem ? videoItem.numFrames : 1]
@@ -26,11 +25,10 @@ export const ScrubberSlider: FC = () => {
         {({ handles, getHandleProps }) => (
           <div>
             {handles.map((handle) => (
-              <KeyboardHandle
+              <ScrubberHandle
                 key={handle.id}
                 handle={handle}
                 domain={domain}
-                className={s.scrubber}
                 getHandleProps={getHandleProps}
               />
             ))}
@@ -40,3 +38,5 @@ export const ScrubberSlider: FC = () => {
     </Slider>
   )
 }
+
+export default ScrubberSlider

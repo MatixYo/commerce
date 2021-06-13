@@ -3,16 +3,13 @@ import commerce from '@lib/api/commerce'
 import { Layout } from '@components/common'
 import { Container, Text } from '@components/ui'
 import { useRouter } from 'next/router'
-import { motion } from 'framer-motion'
 import VideoCropper from '@components/studio/VideoEditor/VideoCropper'
-import TimelineSnapshots from '@components/studio/TimelineSnapshots'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { VideoItemType, VideoSourceType } from '@components/studio/types'
-import cn from 'classnames'
+import { useEffect, useRef, useState } from 'react'
 import Timeline from '@components/studio/Timeline'
 import getAnimationVideo from '@framework/animations/get-animation-video'
-import { ManagedStudioContext, useStudio } from '@components/studio/context'
+import { useStudio } from '@components/studio/context'
 import VideoSnapshot from '@lib/video-snapshot'
+import { SnapshotType } from '@components/studio/types'
 
 export async function getStaticProps({
   preview,
@@ -36,6 +33,7 @@ export async function getStaticPaths() {
 }
 
 const OFFSET = 0.05
+const COUNT = 4
 
 export default function StudioEdit() {
   const router = useRouter()
@@ -45,11 +43,29 @@ export default function StudioEdit() {
     setVideoItem,
     setCurrentFrame,
     keyframes,
-    updateKeyframe,
+    snapshots,
+    setKeyframes,
+    setSnapshots,
     unsetVideoItem,
   } = useStudio()
 
   const [videoId, projectId] = router.query.slug as [string, string]
+
+  useEffect(() => {
+    if (!videoItem) return
+
+    const innerValues = Array.from(Array(COUNT - 2).keys()).map(
+      (i) => OFFSET + (1 - 2 * OFFSET) * ((i + 1) / (COUNT - 1))
+    )
+
+    const { numFrames } = videoItem
+
+    setKeyframes([
+      Math.ceil(OFFSET * numFrames),
+      ...innerValues.map((v) => Math.ceil(v * numFrames)),
+      Math.ceil((1 - OFFSET) * numFrames),
+    ])
+  }, [videoItem])
 
   useEffect(() => {
     ;(async () => {
@@ -71,14 +87,40 @@ export default function StudioEdit() {
     videoSnapshot.current = new VideoSnapshot(videoItem.videoSources)
   }, [videoItem])
 
+  /* TODO sprawdzać czy są nowe canvasy w state */
+  const [loadingSnapshots, setLoadingSnapshots] = useState(false)
+
   useEffect(() => {
-    if (!videoItem || !keyframes || !videoSnapshot.current) return
+    if (!videoItem || !keyframes || !videoSnapshot.current || loadingSnapshots)
+      return
+    /* Remove snapshots of keyframes that don't exist anymore */
+    const nextSnapshots = snapshots.filter((snapshot: SnapshotType) =>
+      keyframes.includes(snapshot[0])
+    )
+
+    /* Check if no new snapshots have to be added */
+    /* TODO optimize how many times this function is rendered */
+    if (
+      keyframes.every((keyframe: number) =>
+        nextSnapshots.some((snapshot: SnapshotType) => snapshot[0] == keyframe)
+      )
+    )
+      return
     ;(async () => {
+      setLoadingSnapshots(true)
+
+      // @ts-ignore
       const { videoWidth, videoHeight } =
         await videoSnapshot.current?.getProperties()
+      if (!videoWidth || !videoHeight) return
 
       for (const keyframe of keyframes) {
-        if (!keyframe.canvas) {
+        if (
+          !nextSnapshots.some(
+            (snapshot: SnapshotType) => snapshot[0] === keyframe
+          )
+        ) {
+          console.log('redrawing', keyframe)
           const canvas = document.createElement('canvas')
           canvas.width = videoWidth
           canvas.height = videoHeight
@@ -86,21 +128,20 @@ export default function StudioEdit() {
           const context = canvas.getContext('2d')
           if (!context) throw new Error('error creating canvas context')
 
+          //@ts-ignore
           const video = await videoSnapshot.current.takeSnapshot(
-            keyframe.frameNumber / videoItem.frameRate
+            keyframe / videoItem.frameRate
           )
           context.drawImage(video, 0, 0, videoWidth, videoHeight)
 
-          updateKeyframe({
-            ...keyframe,
-            canvas,
-          })
+          nextSnapshots.push([keyframe, canvas])
         }
       }
-    })()
-  }, [videoItem, keyframes, videoSnapshot])
 
-  useEffect(() => console.log(keyframes), [keyframes])
+      setLoadingSnapshots(false)
+      setSnapshots(nextSnapshots)
+    })()
+  }, [videoItem, videoSnapshot, keyframes, snapshots, loadingSnapshots])
 
   useEffect(() => {
     return () => {

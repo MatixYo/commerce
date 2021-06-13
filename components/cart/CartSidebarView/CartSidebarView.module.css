@@ -7,9 +7,9 @@
 }
 
 .root.success {
-  @apply bg-green text-white;
+  @apply bg-green-500 text-white;
 }
 
 .root.error {
-  @apply bg-red text-white;
+  @apply bg-red-500 text-white;
 }

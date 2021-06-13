@@ -16,7 +16,9 @@ const VideoCropper: FC<Props> = () => {
   const ref = useRef(null)
 
   useEffect(() => {
+    //@ts-ignore
     if (ref.current?.videoRef && videoItem) {
+      //@ts-ignore
       ref.current.videoRef.currentTime = currentFrame / videoItem.frameRate
     }
   }, [ref, currentFrame, videoItem])

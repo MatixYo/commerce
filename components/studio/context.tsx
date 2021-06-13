@@ -1,6 +1,6 @@
 import {
   CroppedAreaType,
-  KeyframeType,
+  SnapshotType,
   VideoItemType,
 } from '@components/studio/types'
 import React, { FC, useMemo } from 'react'
@@ -8,7 +8,8 @@ import React, { FC, useMemo } from 'react'
 export interface State {
   videoItem: VideoItemType | undefined
   currentFrame: number
-  keyframes: KeyframeType[]
+  keyframes: number[]
+  snapshots: SnapshotType[]
   rotation: number
   croppedArea: CroppedAreaType
 }
@@ -17,6 +18,7 @@ const initialState = {
   videoItem: undefined,
   currentFrame: 0,
   keyframes: [],
+  snapshots: [],
   rotation: 0,
   croppedArea: { width: 0, height: 0, x: 0, y: 0 },
 }
@@ -34,20 +36,20 @@ type Action =
       frameNumber: number
     }
   | {
-      type: 'UPDATE_KEYFRAME'
-      keyframe: KeyframeType
-    }
-  | {
       type: 'ADD_KEYFRAME'
-      keyframe: KeyframeType
+      keyframe: number
     }
   | {
       type: 'DELETE_KEYFRAME'
-      frameNumber: number
+      keyframe: number
     }
   | {
-      type: 'UPDATE_KEYFRAMES'
-      keyframes: KeyframeType[]
+      type: 'SET_KEYFRAMES'
+      keyframes: number[]
+    }
+  | {
+      type: 'SET_SNAPSHOTS'
+      snapshots: SnapshotType[]
     }
   | {
       type: 'ROTATE_CW'
@@ -72,7 +74,8 @@ function studioReducer(state: State, action: Action) {
       return {
         ...state,
         videoItem: undefined,
-        keyframes: undefined,
+        keyframes: [],
+        snapshots: [],
       }
     }
     case 'SET_CURRENT_FRAME': {
@@ -81,53 +84,34 @@ function studioReducer(state: State, action: Action) {
         currentFrame: action.frameNumber,
       }
     }
-    case 'UPDATE_KEYFRAME': {
-      return {
-        ...state,
-        keyframes: state.keyframes.map((keyframe) =>
-          keyframe.frameNumber === action.keyframe.frameNumber
-            ? {
-                ...keyframe,
-                ...action.keyframe,
-              }
-            : keyframe
-        ),
-      }
-    }
     case 'ADD_KEYFRAME': {
       /* Here we prevent from adding duplicates and sorting keyframes after adding new one's */
       return {
         ...state,
         keyframes: [
-          ...state.keyframes.filter(
-            (keyframe) => keyframe.frameNumber !== action.keyframe.frameNumber
-          ),
+          ...state.keyframes.filter((keyframe) => keyframe !== action.keyframe),
           action.keyframe,
-        ].sort((a, b) => a.frameNumber - b.frameNumber),
+        ].sort((a, b) => a - b),
       }
     }
     case 'DELETE_KEYFRAME': {
       return {
         ...state,
         keyframes: state.keyframes.filter(
-          (keyframe) => keyframe.frameNumber !== action.frameNumber
+          (keyframe) => keyframe !== action.keyframe
         ),
       }
     }
-    case 'UPDATE_KEYFRAMES': {
+    case 'SET_KEYFRAMES': {
       return {
         ...state,
-        keyframes: action.keyframes.map((nextKeyframe) => {
-          const prevKeyframe = state.keyframes.find(
-            (keyframe) => nextKeyframe.frameNumber === keyframe.frameNumber
-          )
-          return typeof prevKeyframe !== 'undefined'
-            ? {
-                ...prevKeyframe,
-                ...nextKeyframe,
-              }
-            : nextKeyframe
-        }),
+        keyframes: action.keyframes,
+      }
+    }
+    case 'SET_SNAPSHOTS': {
+      return {
+        ...state,
+        snapshots: action.snapshots,
       }
     }
   }
@@ -143,14 +127,15 @@ export const StudioProvider: FC = (props) => {
   const setCurrentFrame = (frameNumber: number) =>
     dispatch({ type: 'SET_CURRENT_FRAME', frameNumber })
 
-  const updateKeyframe = (keyframe: KeyframeType) =>
-    dispatch({ type: 'UPDATE_KEYFRAME', keyframe })
-  const addKeyframe = (keyframe: KeyframeType) =>
+  const addKeyframe = (keyframe: number) =>
     dispatch({ type: 'ADD_KEYFRAME', keyframe })
-  const deleteKeyframe = (frameNumber: number) =>
-    dispatch({ type: 'DELETE_KEYFRAME', frameNumber })
-  const updateKeyframes = (keyframes: KeyframeType[]) =>
-    dispatch({ type: 'UPDATE_KEYFRAMES', keyframes })
+  const deleteKeyframe = (keyframe: number) =>
+    dispatch({ type: 'DELETE_KEYFRAME', keyframe })
+  const setKeyframes = (keyframes: number[]) =>
+    dispatch({ type: 'SET_KEYFRAMES', keyframes })
+
+  const setSnapshots = (snapshots: SnapshotType[]) =>
+    dispatch({ type: 'SET_SNAPSHOTS', snapshots })
 
   const value = useMemo(
     () => ({
@@ -158,10 +143,10 @@ export const StudioProvider: FC = (props) => {
       setVideoItem,
       unsetVideoItem,
       setCurrentFrame,
-      updateKeyframe,
       addKeyframe,
       deleteKeyframe,
-      updateKeyframes,
+      setKeyframes,
+      setSnapshots,
     }),
     [state]
   )

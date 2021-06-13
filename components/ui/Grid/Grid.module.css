@@ -58,11 +58,11 @@
     }
 
     & > *:nth-child(6n + 5) {
-      @apply bg-blue;
+      @apply bg-blue-500;
     }
 
     & > *:nth-child(6n + 3) {
-      @apply bg-pink;
+      @apply bg-pink-500;
     }
 
     & > *:nth-child(6n + 6) {
@@ -84,7 +84,7 @@
 
   &.filled {
     & > *:nth-child(6n + 2) {
-      @apply bg-blue;
+      @apply bg-blue-500;
     }
 
     & > *:nth-child(6n + 4) {
@@ -92,7 +92,7 @@
     }
 
     & > *:nth-child(6n + 3) {
-      @apply bg-pink;
+      @apply bg-pink-500;
     }
 
     & > *:nth-child(6n + 6) {
@@ -124,7 +124,7 @@
     }
 
     & > *:nth-child(6n + 3) {
-      @apply bg-pink;
+      @apply bg-pink-500;
     }
   }
 }
@@ -150,7 +150,7 @@
     }
 
     & > *:nth-child(6n + 3) {
-      @apply bg-pink;
+      @apply bg-pink-500;
     }
   }
 }

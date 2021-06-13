@@ -1,0 +1,38 @@
+.slider {
+  @apply absolute inset-0;
+}
+
+.rail {
+  @apply absolute inset-0 z-20 cursor-pointer;
+}
+
+.scrubberContainer {
+  @apply absolute inset-y-0;
+
+  &:before {
+    content: "";
+    @apply block h-full w-1.5 border-l-2 border-r-2 transform-gpu -translate-x-2/4 opacity-80;
+  }
+}
+
+.add {
+  @apply w-9 h-9 rounded-full bg-accents-2 transform-gpu -translate-x-2/4 translate-y-4;
+
+  & > svg {
+    @apply mx-auto my-auto;
+  }
+}
+
+.scrubber {
+  @apply absolute z-30 w-6 h-5 top-0 bg-accents-5 transform-gpu -translate-y-full -translate-x-2/4 rounded-t filter drop-shadow;
+
+  &, &:focus {
+    @apply outline-none;
+  }
+
+  &:after {
+    content: "";
+    @apply absolute mx-auto bottom-0 inset-x-0 w-4 h-4 transform-gpu translate-y-2/4 rotate-45;
+    background-color: inherit;
+  }
+}
