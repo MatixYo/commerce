@@ -12,10 +12,14 @@ export function drawBaseLayer(
   context.clearRect(0, 0, width, height)
 
   /* TODO sprawdzić warunki graniczne */
-  for (let i = 0; i < width / lineWidth; i++) {
+  for (let dx = 0; dx < width; dx += lineWidth) {
     context.drawImage(
-      sourceList[i % sourceList.length],
-      i * lineWidth,
+      sourceList[(dx / lineWidth) % sourceList.length],
+      dx,
+      0,
+      lineWidth,
+      height,
+      dx,
       0,
       lineWidth,
       height

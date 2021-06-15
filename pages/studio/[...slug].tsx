@@ -10,6 +10,7 @@ import getAnimationVideo from '@framework/animations/get-animation-video'
 import { useStudio } from '@components/studio/context'
 import VideoSnapshot from '@lib/video-snapshot'
 import { SnapshotType } from '@components/studio/types'
+import AnimatedView from '@components/AnimatedCard'
 
 export async function getStaticProps({
   preview,
@@ -156,6 +157,7 @@ export default function StudioEdit() {
         <>
           <VideoCropper />
           <Timeline />
+          <AnimatedView />
         </>
       )}
     </Container>

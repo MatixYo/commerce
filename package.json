@@ -2,7 +2,7 @@
   "name": "nextjs-commerce",
   "version": "1.0.0",
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next dev -p 3001",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "analyze": "BUNDLE_ANALYZE=both yarn build",
@@ -19,6 +19,8 @@
     "node": ">=14.x"
   },
   "dependencies": {
+    "@draft-js-plugins/editor": "^4.1.0",
+    "@draft-js-plugins/side-toolbar": "^4.2.1",
     "@reach/portal": "^0.15.0",
     "@vercel/fetch": "^6.1.0",
     "autoprefixer": "^10.2.6",
@@ -27,6 +29,7 @@
     "classnames": "^2.3.1",
     "cookie": "^0.4.1",
     "dot-object": "^2.1.4",
+    "draft-js": "^0.11.7",
     "email-validator": "^2.0.4",
     "framer-motion": "^4.1.17",
     "immutability-helper": "^3.1.1",
@@ -75,6 +78,8 @@
     "@types/react": "^17.0.9",
     "@types/shopify-buy": "^2.10.5",
     "@types/superagent": "^4.1.11",
+    "@types/draft-js": "^0.11.3",
+    "cross-env": "^7.0.3",
     "deepmerge": "^4.2.2",
     "graphql": "^15.5.0",
     "husky": "^4.3.8",

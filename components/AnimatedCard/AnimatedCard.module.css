@@ -1,0 +1,85 @@
+.root {
+  @apply relative grid items-start gap-8 grid-cols-1;
+  --margin: 9mm;
+  min-height: 800vh;
+
+  @screen md {
+    min-height: 1000vh;
+  }
+
+  @screen lg {
+    @apply grid-cols-12;
+  }
+}
+
+/* TODO why can't do bottom */
+.animationDisplay {
+  @apply sticky top-0 flex items-center px-0 pt-36 pb-0 box-border col-span-1 bg-violet h-screen overflow-x-hidden;
+
+  @screen lg {
+    margin-right: -2rem;
+    margin-left: -2rem;
+    @apply mx-0 col-span-6;
+  }
+}
+
+.animationDisplay:before {
+  @apply absolute inset-0 z-0 transition ease-in-out duration-500 bg-repeat-space block;
+  background-image: url('/bg-products.svg');
+  content: '';
+}
+
+.card {
+  @apply relative mx-auto;
+  width: 600px;
+  height: 400px;
+  left: calc(var(--margin) / 2);
+
+  perspective: 2000px;
+}
+
+.inner, .base, .reverse {
+  @apply w-full h-full;
+}
+
+.inner {
+  @apply relative bg-white;
+  /* TODO */
+  z-index: var(--z-index);
+  transform-style: preserve-3d;
+  transform: translate3d(
+    calc(var(--offset) * 1mm / 2),
+    0,
+    calc(var(--elevation) * 1px)
+  )
+  rotateY(calc(var(--rotation) * -1deg)
+  );
+  box-shadow: calc(var(--shadow-offset) * 1px) 0 30px 0 rgba(0, 0, 0, .2);
+}
+
+.base {
+  backface-visibility: hidden;
+}
+
+.reverse {
+  @apply absolute inset-0 text-gray-700 px-4 py-6;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+
+.revealingContainer {
+  @apply absolute inset-0 bg-white;
+
+  /* TODO */
+  transform: translate3D(calc(var(--offset) * -1mm / 2), 0, 0);
+  padding: var(--margin) 0 var(--margin) var(--margin);
+}
+
+.revealing {
+  @apply absolute z-20 box-content w-full h-full;
+  top: calc(var(--margin) * -1);
+  bottom: calc(var(--margin) * -1);
+  left: calc(var(--margin) * -1);
+  border-width: var(--margin) 0 var(--margin) var(--margin);
+}
+
