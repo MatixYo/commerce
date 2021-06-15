@@ -1,20 +1,20 @@
 {
-  "title": "ACME Storefront | Powered by Next.js Commerce",
-  "titleTemplate": "%s - ACME Storefront",
-  "description": "Next.js Commerce - https://www.nextjs.org/commerce",
+  "title": "papermate.io | Animations on Paper",
+  "titleTemplate": "%s - papermate.io",
+  "description": "Print animations on paper. Upload GIF or video. Select existing Papermation and print it.",
   "openGraph": {
-    "title": "ACME Storefront | Powered by Next.js Commerce",
-    "description": "Next.js Commerce - https://www.nextjs.org/commerce",
+    "title": "papermate.io | Anmations on Paper",
+    "description": "Print animations on paper. Upload GIF or video. Select existing Papermation and print it.",
     "type": "website",
     "locale": "en_IE",
-    "url": "https://nextjs.org/commerce",
-    "site_name": "Next.js Commerce",
+    "url": "https://papermate.io/",
+    "site_name": "Papermate.io",
     "images": [
       {
         "url": "/card.png",
         "width": 800,
         "height": 600,
-        "alt": "Next.js Commerce"
+        "alt": "Papermate.io"
       }
     ]
   },
