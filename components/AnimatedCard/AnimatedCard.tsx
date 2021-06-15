@@ -10,7 +10,7 @@ import {
 } from 'framer-motion'
 import { useRect } from '@lib/hooks/useRect'
 import { useWindowSize } from '@lib/hooks/useWindowSize'
-import ReverseEditor from '@components/ReverseEditor/ReverseEditor'
+import ReverseEditor from '@components/studio/ReverseEditor'
 
 interface CSSProps extends CSSProperties {
   '--offset': MotionValue<any>
