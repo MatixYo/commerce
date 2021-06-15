@@ -13,7 +13,7 @@ export const useOnScreen = (ref: { current: Element }) => {
     return () => {
       observer.disconnect()
     }
-  }, [])
+  }, [ref])
 
   return isIntersecting
 }

@@ -40,7 +40,7 @@ const TimelineSnapshots: FC<Props> = ({ className, onLoadedChange }) => {
       }
       if (onLoadedChange) onLoadedChange(true)
     })()
-  }, [ref, videoItem, width, height])
+  }, [ref, videoItem, width, height, onLoadedChange])
 
   return (
     <canvas

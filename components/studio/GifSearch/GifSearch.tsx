@@ -76,7 +76,7 @@ const GifSearch: FC<Props> = ({
     if (isVisible && !isReachingEnd && !isRefreshing) {
       setSize(size + 1)
     }
-  }, [isVisible, isRefreshing])
+  }, [isVisible, isRefreshing, isReachingEnd, setSize, size])
 
   return useMemo(
     () => (
@@ -154,7 +154,17 @@ const GifSearch: FC<Props> = ({
         </div>
       </>
     ),
-    [t, gifs]
+    [
+      id,
+      t,
+      className,
+      isEmpty,
+      value,
+      gifs,
+      isLoadingMore,
+      isReachingEnd,
+      onSelectGif,
+    ]
   )
 }
 

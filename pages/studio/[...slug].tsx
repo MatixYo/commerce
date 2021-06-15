@@ -66,7 +66,7 @@ export default function StudioEdit() {
       ...innerValues.map((v) => Math.ceil(v * numFrames)),
       Math.ceil((1 - OFFSET) * numFrames),
     ])
-  }, [videoItem])
+  }, [setKeyframes, videoItem])
 
   useEffect(() => {
     ;(async () => {
@@ -78,7 +78,7 @@ export default function StudioEdit() {
 
       setCurrentFrame(Math.ceil(OFFSET * item.numFrames))
     })()
-  }, [videoItem, videoId])
+  }, [videoItem, videoId, setCurrentFrame, setVideoItem])
 
   const videoSnapshot = useRef<VideoSnapshot | null>(null)
 
@@ -142,13 +142,20 @@ export default function StudioEdit() {
       setLoadingSnapshots(false)
       setSnapshots(nextSnapshots)
     })()
-  }, [videoItem, videoSnapshot, keyframes, snapshots, loadingSnapshots])
+  }, [
+    videoItem,
+    videoSnapshot,
+    keyframes,
+    snapshots,
+    loadingSnapshots,
+    setSnapshots,
+  ])
 
   useEffect(() => {
     return () => {
       unsetVideoItem()
     }
-  }, [])
+  }, [unsetVideoItem])
 
   return (
     <Container>

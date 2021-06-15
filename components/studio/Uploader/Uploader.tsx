@@ -71,50 +71,56 @@ const Uploader: FC = () => {
   const router = useRouter()
   const { setVideoItem } = useStudio()
 
-  const onDrop = useCallback(async (acceptedFiles) => {
-    try {
-      const result = await uploadToCloudinary(acceptedFiles[0], (v) =>
-        setProgressVal(v)
-      )
-      await createItem(result)
-    } catch (err) {
-      console.log(err)
-    } finally {
-      setProgressVal(null)
-    }
-  }, [])
-
-  const onPaste = useCallback(async (event) => {
-    const clipboardData =
-      event.clipboardData || event.originalEvent.clipboardData
-
-    let file
-    if (clipboardData.files.length) {
-      ;[file] = clipboardData.files
-    } else {
-      const url = clipboardData.getData('text')
-      const ext = afterLast(url, '.')
-      if (
-        acceptedFileFormats.image
-          .concat(acceptedFileFormats.video)
-          .includes(ext)
-      )
-        file = url
-      else {
-        console.log('zły adres')
-        return
+  const onDrop = useCallback(
+    async (acceptedFiles) => {
+      try {
+        const result = await uploadToCloudinary(acceptedFiles[0], (v) =>
+          setProgressVal(v)
+        )
+        await createItem(result)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setProgressVal(null)
       }
-    }
+    },
+    [createItem]
+  )
 
-    try {
-      const result = await uploadToCloudinary(file, (v) => setProgressVal(v))
-      await createItem(result)
-    } catch (err) {
-      console.log(err)
-    } finally {
-      setProgressVal(null)
-    }
-  }, [])
+  const onPaste = useCallback(
+    async (event) => {
+      const clipboardData =
+        event.clipboardData || event.originalEvent.clipboardData
+
+      let file
+      if (clipboardData.files.length) {
+        ;[file] = clipboardData.files
+      } else {
+        const url = clipboardData.getData('text')
+        const ext = afterLast(url, '.')
+        if (
+          acceptedFileFormats.image
+            .concat(acceptedFileFormats.video)
+            .includes(ext)
+        )
+          file = url
+        else {
+          console.log('zły adres')
+          return
+        }
+      }
+
+      try {
+        const result = await uploadToCloudinary(file, (v) => setProgressVal(v))
+        await createItem(result)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setProgressVal(null)
+      }
+    },
+    [createItem]
+  )
 
   const onSelectGif = useCallback(async (data) => {
     const result = {
@@ -144,7 +150,7 @@ const Uploader: FC = () => {
         console.log(err)
       }
     },
-    [setVideoItem]
+    [router, setVideoItem]
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
