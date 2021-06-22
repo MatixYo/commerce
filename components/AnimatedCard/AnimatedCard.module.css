@@ -3,6 +3,9 @@
   --margin: 9mm;
   min-height: 800vh;
 
+  /*margin-left: calc((100vw - 960px) / -2) !important;
+  margin-right: calc((100vw - 960px) / -2) !important;*/
+
   @screen md {
     min-height: 1000vh;
   }
@@ -19,7 +22,7 @@
   @screen lg {
     margin-right: -2rem;
     margin-left: -2rem;
-    @apply mx-0 col-span-6;
+    @apply mx-0 col-span-8;
   }
 }
 
@@ -68,7 +71,7 @@
 }
 
 .revealingContainer {
-  @apply absolute inset-0 bg-white;
+  @apply absolute inset-0 z-20;/* bg-white; */
 
   /* TODO */
   transform: translate3D(calc(var(--offset) * -1mm / 2), 0, 0);

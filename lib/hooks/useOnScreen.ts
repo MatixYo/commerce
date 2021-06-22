@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 //from https://github.com/vercel/swr/blob/master/examples/infinite-scroll/hooks/useOnScreen.js
-export const useOnScreen = (ref: { current: Element }) => {
+export const useOnScreen = (ref: React.MutableRefObject<undefined>) => {
   const [isIntersecting, setIntersecting] = useState(false)
 
   useEffect(() => {

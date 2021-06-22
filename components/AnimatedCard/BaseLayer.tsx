@@ -15,7 +15,7 @@ const BaseLayer: FC<Props> = ({ className }) => {
   const { snapshots } = useStudio()
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!ref.current || snapshots.length < 2) return
 
     drawBaseLayer(
       ref?.current,
@@ -23,9 +23,7 @@ const BaseLayer: FC<Props> = ({ className }) => {
     )
   }, [ref, snapshots])
 
-  return (
-    <canvas ref={ref} width={width} height={height} className={className} />
-  )
+  return <canvas ref={ref} width={1200} height={800} className={className} />
 }
 
 export { BaseLayer }

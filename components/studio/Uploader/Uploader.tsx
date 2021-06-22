@@ -71,6 +71,19 @@ const Uploader: FC = () => {
   const router = useRouter()
   const { setVideoItem } = useStudio()
 
+  const createItem = useCallback(
+    async (item) => {
+      try {
+        setVideoItem(item)
+        const { id } = await addAnimationVideo(item)
+        await router.push(`/studio/${id}`)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    [router, setVideoItem]
+  )
+
   const onDrop = useCallback(
     async (acceptedFiles) => {
       try {
@@ -122,35 +135,25 @@ const Uploader: FC = () => {
     [createItem]
   )
 
-  const onSelectGif = useCallback(async (data) => {
-    const result = {
-      providerId: data.gfyId,
-      createdUsing: 'gfycat',
-      originalSource: 'TODO',
-      videoSources: [
-        { src: data.webmUrl, type: 'video/webm' },
-        { src: data.mp4Url, type: 'video/mp4' },
-      ],
-      width: data.width,
-      height: data.height,
-      frameRate: data.frameRate,
-      numFrames: data.numFrames,
-      avgColor: data.avgColor,
-    }
-    await createItem(result)
-  }, [])
-
-  const createItem = useCallback(
-    async (item) => {
-      try {
-        setVideoItem(item)
-        const { id } = await addAnimationVideo(item)
-        await router.push(`/studio/${id}`)
-      } catch (err) {
-        console.log(err)
+  const onSelectGif = useCallback(
+    async (data) => {
+      const result = {
+        providerId: data.gfyId,
+        createdUsing: 'gfycat',
+        originalSource: 'TODO',
+        videoSources: [
+          { src: data.webmUrl, type: 'video/webm' },
+          { src: data.mp4Url, type: 'video/mp4' },
+        ],
+        width: data.width,
+        height: data.height,
+        frameRate: data.frameRate,
+        numFrames: data.numFrames,
+        avgColor: data.avgColor,
       }
+      await createItem(result)
     },
-    [router, setVideoItem]
+    [createItem]
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

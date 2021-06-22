@@ -22,7 +22,7 @@ const KeyframesSlider: FC = () => {
         setCurrentFrame(diff[0])
       }
     },
-    [prevValues, setCurrentFrame]
+    [prevValues]
   )
 
   return (

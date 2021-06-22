@@ -20,7 +20,7 @@ interface CSSProps extends CSSProperties {
   '--shadowOffset': MotionValue<any>
 }
 
-const lineWidthMm = 3
+const lineWidthMm = 1
 
 const AnimatedCard: FC = () => {
   const ref = useRef(null)
@@ -36,10 +36,10 @@ const AnimatedCard: FC = () => {
   const { scrollY } = useViewportScroll()
   const sprungScroll = useSpring(scrollY, { damping: 500, stiffness: 10000 })
 
-  const offset = useTransform(scrollY, [o, o + 5 * o, o + 7 * h], [0, 190, 0])
+  const offset = useTransform(scrollY, [o, o + 5 * h, o + 7 * h], [0, 220, 0])
   const roundOffset = useTransform(
     offset,
-    (v) => Math.round(v / lineWidthMm) * lineWidthMm
+    (v) => v //Math.round(v / lineWidthMm) * lineWidthMm
   )
   const sprungOffset = useSpring(roundOffset, {
     damping: 800,

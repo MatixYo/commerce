@@ -53,7 +53,7 @@ const GifSearch: FC<Props> = ({
   const { t } = useTranslation('studio')
 
   //TODO add debounce
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('Cats')
 
   const ref = useRef()
   const isVisible = useOnScreen(ref)
@@ -76,7 +76,7 @@ const GifSearch: FC<Props> = ({
     if (isVisible && !isReachingEnd && !isRefreshing) {
       setSize(size + 1)
     }
-  }, [isVisible, isRefreshing, isReachingEnd, setSize, size])
+  }, [isVisible, isRefreshing])
 
   return useMemo(
     () => (
@@ -103,6 +103,7 @@ const GifSearch: FC<Props> = ({
             id={id}
             className={s.input}
             placeholder="Cats"
+            value={value}
             onInput={(e) => setValue(e.currentTarget.value)}
           />
         </div>
@@ -154,17 +155,7 @@ const GifSearch: FC<Props> = ({
         </div>
       </>
     ),
-    [
-      id,
-      t,
-      className,
-      isEmpty,
-      value,
-      gifs,
-      isLoadingMore,
-      isReachingEnd,
-      onSelectGif,
-    ]
+    [t, gifs]
   )
 }
 

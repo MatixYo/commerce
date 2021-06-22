@@ -66,7 +66,7 @@ export default function StudioEdit() {
       ...innerValues.map((v) => Math.ceil(v * numFrames)),
       Math.ceil((1 - OFFSET) * numFrames),
     ])
-  }, [setKeyframes, videoItem])
+  }, [videoItem])
 
   useEffect(() => {
     ;(async () => {
@@ -78,7 +78,7 @@ export default function StudioEdit() {
 
       setCurrentFrame(Math.ceil(OFFSET * item.numFrames))
     })()
-  }, [videoItem, videoId, setCurrentFrame, setVideoItem])
+  }, [videoItem, videoId])
 
   const videoSnapshot = useRef<VideoSnapshot | null>(null)
 
@@ -121,7 +121,6 @@ export default function StudioEdit() {
             (snapshot: SnapshotType) => snapshot[0] === keyframe
           )
         ) {
-          console.log('redrawing', keyframe)
           const canvas = document.createElement('canvas')
           canvas.width = videoWidth
           canvas.height = videoHeight
@@ -142,20 +141,13 @@ export default function StudioEdit() {
       setLoadingSnapshots(false)
       setSnapshots(nextSnapshots)
     })()
-  }, [
-    videoItem,
-    videoSnapshot,
-    keyframes,
-    snapshots,
-    loadingSnapshots,
-    setSnapshots,
-  ])
+  }, [videoItem, videoSnapshot, keyframes, snapshots, loadingSnapshots])
 
   useEffect(() => {
     return () => {
       unsetVideoItem()
     }
-  }, [unsetVideoItem])
+  }, [])
 
   return (
     <Container>
